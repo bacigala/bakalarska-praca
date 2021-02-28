@@ -2,22 +2,11 @@
 
 \label{kap:vychodisko}
 
-Kapitola približuje súčasný stav a perspektívu robotiky a automatizácie. Obsahuje tiež krátke predstavenie inštitúcií a projektu, ktorým vďačíme za iniciatívu rozvíjať tieto oblasti predovšetkým u mladších generácií.
-
-Ďalej sa tu nachádza opis súčasného stavu robotov figurujúcich v našej práci, Otto a Mokrarosa, ich riadiacich programov, možností a obmedzení. Súčasťou je tiež prehľad podobných riešení, ktorými sa možno pri práci inšpirovať. 
+Kapitola predstavuje roboty Otto a Mokrarosa, na ktorých riadenie sa v práci zameriavame. Uvádzame možnosti a obmedzenia plynúce z aktuálnej implementácie ich riadiacich programov, ako aj z ich fyzickej konštrukcie. Súčasťou je prehľad podobných riešení, ktorými sa možno pri práci inšpirovať.
 
 % ===
 % === Robot Otto a Mokrarosa
 % ===
-\section{Robotika a automatizácia}
-todo
-
-\subsection{IT Akadémia}
-IT Akadémia je jednym z národných projektov Centra vedecko-technických informácií SR (CVTI SR). \cite{CVTISR-ITAkademia} (CVTI SR je organizácia koordinujúca činnosť interdisciplinárnych výskumno-vývojových centier a národných infraštruktúr pre výskum, vývoj, inovácie a vzdelávanie. \cite{CVTISR} Mimo iného sa venuje aj popularizácii vedy a techniky, s čím súvisí projekt IT Akadémie.) Ako už názov napovedá, jedným zo zámeroov je podpora vzdelávania v oblasti informačných a komunikačných technológií (IKT). Cieľovú skupinu tvoria žiaci základných a stredných škol. Podpora spočíva v modernizácií obsahu a metód výučby predmetov súvisiacich s IKT, rozširovaní palety dostupných štujných materiálov, ale i v dopĺňaní vedomostí vyučujúcich. Mladých majú k ďalšiemu štúdiu oblasti motivovať i krúžky, semináre, súťaže či tábory. \cite{ITAkademia}
-
-\subsection{Fablab}
-Fablab je celosvetová sieť laboratórií - dielní, voľne dostupných verejnosti, poskytujúcich prístup k moderným technológiám ako 3D tlač, CNC frézovanie, alebo 3D skenovanie. Cieľom je poskytnúť komunitný prístup k prostriedkom komukoľvek, kto má záujem o rozvoj alebo vzdelanie v oblasti. Priestory sú k dispozícií aj pre testovanie prototypov. \cite{Fablab} Fablab Bratislava je organizačnou súčasťou CVTI SR, v prevádzke je od roku 2014. \cite{FablabVedeckyParkUK} Dielňa podporuje rôzne projekty a v rámci činnosti tiež organizuje tvorivé dielne, sústredenia a tábory pre mladších účastníkov vo veku 11-15 rokov, kde je im umožnené zoznámiť sa s novou technológiou, programovaním i robotikou hravou formou. Pod názvom Denný tábor digitálnych technológií (DTDT) je akcia organizovaná každoročne od leta 2018. \cite{FablabDTDT}
-
 \section{Robot Otto a Mokrarosa}
 Cieľom práce nie je stavba robota, zameriavame sa na riadenie existujúcich robotov, najmä modelu Otto a Mokrarosa. Tieto roboty boli použité vo výučbe v rámci denných táborov v bratislavskom Fablabe a tiež v tábore IT Akadémie. Sú teda testované v praxi, poznáme ich nedostatky ale i potenciál, ktorý máme v pláne rozvíjať. Na prvý pohľad možno badať podobu danú výrobným procesom, nakoľko oba roboty sú tlačené 3D tlačiarňou, rozmermi sú kompaktné, konštrukciou relatívne jednoduché. Roboty sú principiálne podobné no majú aj svoje špecifiká. Treba zdôrazniť že ich primárnym určením nie je zdolávanie prekážok alebo fyzická manipulácia s nejakými predmetmi, aj keď nie je vylúčená. Primárne sa jedná o edukačné, demonštračné zariadenia.
 
@@ -35,6 +24,9 @@ Programovací jazyk Arduino je založený na jazyku C++, sú v ňom však navyš
 
 \subsection{Riadiaci program}
 Riadiaci program robota je vždy možné vytvoriť priamo ako program pre Arduino popísaný vyššie. V prípade denných táborov bolo ale zvolené iné riešenie, umožňujúce riadiť robota aj bez znalosti C++. Princíp je nasledovný. Riadiaci program napísaný v C++ prijíma počas behu v časti loop cez sériový port (pripojenie rozhraním USB alebo bezdrôtovou technológiou BlueTooth) postupnosť znakov ktoré majú predurčený význam. Znaky rozpoznáva a interpretuje ako príkazy. Na strane užívateľa je teda zadávaný reťazec do znakového terminálu (napríklad prostredníctvom programu Putty v OS Windows). Popísaným spôsobom je možné vytvárať jednoduché choreografie, viac o tom uvádzame v nasledujúcej časti, nakoľko nie je pre oba roboty totožný. Výhodou prístupu je mimo iného fakt, že pri ladení choreografie nie je nutné zakaždým kompilovať program pre Arduino. 
+
+\subsection{Servomotor}
+TODO - mozno subsection interakcia s prostredim a subsub pre senzory a motory...
 
 
 % Otto
