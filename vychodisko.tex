@@ -8,11 +8,14 @@ Kapitola predstavuje roboty Otto a Mokrarosa, na ktorých riadenie sa v práci z
 % === Robot Otto a Mokrarosa
 % ===
 \section{Robot Otto a Mokrarosa}
+\label{sec:OttoMokrarosa}
 Cieľom práce nie je stavba robota, zameriavame sa na riadenie existujúcich robotov, najmä modelu Otto a Mokrarosa. Tieto roboty boli použité vo výučbe v rámci denných táborov v bratislavskom Fablabe a tiež v tábore IT Akadémie. Sú teda testované v praxi, poznáme ich nedostatky ale i potenciál, ktorý máme v pláne rozvíjať. Na prvý pohľad možno badať podobu danú výrobným procesom, nakoľko oba roboty sú tlačené 3D tlačiarňou, rozmermi sú kompaktné, konštrukciou relatívne jednoduché. Modularita konštrukcie sľubuje rozšíriteľnosť v mnohých smeroch, roboty sú principiálne podobné no majú aj svoje špecifiká. Treba zdôrazniť, že ich primárnym určením nie je zdolávanie prekážok alebo fyzická manipulácia s nejakými predmetmi, aj keď nie je vylúčená. Primárne sa jedná o edukačné, demonštračné zariadenia.
 
 % Arduino
-\subsection{Riadiaca jednotka --- Arduino Nano}
-Hlavným komponentom ktorý využívajú oba roboty je riadiaca jednotka --- jednočipový mikropočítač Arduino Nano (resp. Arduino Nano Strong v prípade robota Mokrarosa). Verziu Nano môžete vidieť na obrázku \ref{obr:arduino}. Arduino je open--source platforma používaná vo viacerých projektoch na riadnie rôznych zariadení, existuje viacero verzii, ktoré sa líšia výkonom i funkciami \cite{ArduinoConcept}. V našom prípade mikropočítač riadi všetky funkcie robota, teda napríklad vysiela riadiace impulzy pre ovládanie pohybu servomotorov alebo vysielanie zvukových signálov. Taktiež je zodpovedný za komunikáciu so senzormi a je ho možné prostredníctvom počítača programovať. Pre účely tejto práce je najdôležitejším parametrom daným použitím tohto komponentu pamäť. Konkrétne Arduino Nano disponuje 32KB flash pamäte (z čoho 2KB využíva bootloader), pamäťou SRAM o veľkosti 2KB a 1KB pamäte typu EEPROM \footnote{Electrically Erasable Programmable Read--Only Memory --- elektricky zmazateľná pamäť ROM} \cite{ArduinoNanoSpecification}. Je teda zrejmé, že je žiaduce s pamäťou pri implementácii riadiacich programov pokiaľ možno čo najviac šetriť. Komunikácia s mikropočítačom prebieha pripojeným USB káblom, ktorým je možné nahrať do pamäte riadiaci program. Po spustení je možné s programom komunikovať buď to prostredníctvom už spomínaného rozhrania USB, alebo bezdrôtovo, čo umožňuje integrované rozhranie BlueTooth. K dispozícii sú tiež analógové a digitálne piny, ktoré možno softvérovo riadiť. Použiteľné sú ako vstup alebo výstup, pomocou nich je Arduino schopné ovládať motory a načítavať hodnoty zo senzorov. Na obrázku \ref{obr:arduino} ich možno vidieť na hornej a spodnej časti dosky.
+\subsection{Riadiaca jednotka --- Arduino}
+Arduino je open--source platforma, používaná vo viacerých projektoch na riadnie rôznych zariadení. Existuje viacero verzií, líšia sa výkonom i funkciami \cite{ArduinoConcept}. Niektoré ponúkajú integrované pripojenie k ethernetovej sieti či grafickým a zvukovým výstupným zariadeniam, rozdiely sú tiež v parametroch osadených procesorov a pamäte. Multifunkčnosť platformy je však skrytá najmä v možnosti softvérovej obsluhy analógových a digitálnych pinov. Použiteľné sú ako vstup alebo výstup a možno nimi zabezpečiť i obsluhu prerušení. Pomocou pinov je Arduino schopné ovládať motory, načítavať merané hodnoty zo senzorov i komunikovať s inými zariadeniami protokolom I2C.
+
+Hlavným komponentom, ktorý využívajú oba spomínané roboty ako riadiacu jednotku je jednočipový mikropočítač Arduino Nano (resp. Arduino Nano Strong v prípade robota Mokrarosa). Verziu Nano môžete vidieť na obrázku \ref{obr:arduino}. V našom prípade mikropočítač riadi všetky funkcie robota, teda napríklad vysiela riadiace impulzy pre ovládanie pohybu servomotorov alebo vysielanie zvukových signálov. Taktiež je zodpovedný za komunikáciu so senzormi a je ho možné prostredníctvom počítača programovať. Pre účely tejto práce je najdôležitejším parametrom daným použitím tohto komponentu pamäť. Konkrétne Arduino Nano disponuje 32KB flash pamäte (z čoho 2KB využíva bootloader), pamäťou SRAM o veľkosti 2KB a 1KB pamäte typu EEPROM \footnote{Electrically Erasable Programmable Read--Only Memory --- elektricky zmazateľná pamäť ROM} \cite{ArduinoNanoSpecification}. Je teda zrejmé, že je žiaduce s pamäťou pri implementácii riadiacich programov pokiaľ možno čo najviac šetriť. Komunikácia s mikropočítačom prebieha pripojeným USB káblom, ktorým je možné nahrať do pamäte riadiaci program. Po spustení je možné s programom komunikovať buď to prostredníctvom už spomínaného rozhrania USB, alebo bezdrôtovo, čo umožňuje integrované rozhranie BlueTooth. Piny umožňujúce riadenie motorov a obsluhu senzorov je na obrázku \ref{obr:arduino} možno vidieť na hornej a spodnej časti dosky.
 
 \begin{figure}
 \centerline{\includegraphics[width=0.4\textwidth]{images/arduino-nano}}
@@ -31,18 +34,16 @@ Riadiaci program robota je vždy možné vytvoriť priamo ako program pre Arduin
 \subsection{Interakcia s prostredím}
 Roboty interagujú s prostredím použitím receptorov, ktorými získavajú údaje z prostredia a efektorov, ktorými prostredie ovplyvňujú. K mikropočítaču Arduino možno pripojiť rôzne periférie. Aktuálna konštrukcia robotov Otto a Mokrarosa zdieľa použitie komponentov servomotor a ultrazvukový senzor.
 
-\subsubsection{Servomotor}
-TODO - princíp a možnosti
+Servomotor je typ motoru, ktorého úlohou väčšinou nie je kontinuálny pohyb (i keď nie je vylúčený) ale presné natočenie osi. Motor teda disponuje zariadením na určenie polohy, a na základe riadiacej informácie vždy prispôsobí svoje natočnie. V prípade robotov bolo pri stavbe použité mikroservo SG-90, umožňujúce nastavenie polohy v rozmedzí 180 stupňov. Pre riadenie je dostupná knižnica a nastavenie polohy jednotlivých motorov je tak v kóde len jednoduchým volaním príslušnej funkcie s parametrom definujúcim požadované natočenie.
 
-\subsubsection{Ultrazvukový senzor}
-TODO - princíp a možnosti
+Ultrazvukový senzor umožňuje bezkontaktne určiť vzdialenosť od prekážky, zisťuje ju podobne ako v prírode netopier. Princíp je založený na sonare, zariadenie pozostáva z vysielača vysokofrekvenčného (pre človeka nepočuteľného) zvuku a prijímača. Na začiatku merania je odvysielaný signál a následne sa čaká na jeho prijatie po odraze od prekážky. Dôležitý je práve časový rozostup vysielania a prijatia \uv{odrazeného} zvuku. Keďže rýchlosť šírenia zvuku vzduchom poznáme, vieme ľahko vypočítať prekonanú vzdialenosť za daný čas. Model použitý pri stavbe robotov nesie označenie HC-SR04.
 
 % Otto
 \subsection{Robot Otto}
 Vznikol v rámci projektu Otto DIY v susednej Českej republike, s cieľom vytvoriť dostupného robota pre širokú verejnosť. Dnes je vyrábaných niekoľko verzii, robot je modulárny a všetok softvér a hardvér s ním spojený voľne dostupný v duchu open--source \cite{OttoDIY}. Otto bol ústrednou témou Denného tábora digitálnych technológií v roku 2018, kde sa ukázalo, že je vhodný pre demonštračné a edukačné účely pre začínajúcich programátorov. Modularita a open--source princíp sľubujú potenciál aj do budúcnosti, a aj preto je súčasťou našej práce.
 
 \subsubsection{Konštrukcia, možnosti, schopnosti}
-Vzhľadom sa snaží napodobniť človeka, má štyri končatiny, dve \uv{nohy}, každá poháňaná dvoma motormi, mu umožňujú pohyb do všetkých strán roviny. Môže tiež pohybovať \uv{rukami} v rozmedzí 180 stupňov, \uv{oči} tvorí ultrazvukový senzor schopný merať vzdialenosť od prekážky, zhora na hlave sú k dispozícii dve dotykové tlačidlá, ktoré možno použiť ako ďalšie vstupné zariadenie. V tele je osadený reproduktor a mp3 prehrávač. Robota Otto môžete vidieť na obrázku \ref{obr:otto}.
+Vzhľadom sa snaží napodobniť človeka, má štyri končatiny, dve \uv{nohy}, každá poháňaná dvoma servomotormi, mu umožňujú pohyb do všetkých strán roviny. Môže tiež pohybovať \uv{rukami} v rozmedzí 180 stupňov, \uv{oči} tvorí ultrazvukový senzor schopný merať vzdialenosť od prekážky, zhora na hlave sú k dispozícii dve dotykové tlačidlá, ktoré možno použiť ako ďalšie vstupné zariadenie. V tele je osadený reproduktor a mp3 prehrávač. Robota Otto môžete vidieť na obrázku \ref{obr:otto}.
 
 \begin{figure}
 \centerline{\includegraphics[width=0.4\textwidth]{images/otto}}
@@ -51,31 +52,51 @@ Vzhľadom sa snaží napodobniť človeka, má štyri končatiny, dve \uv{nohy},
 \end{figure}
 
 \subsubsection{Riadiaci program, interakcia, programovanie}
-Program vykonávaný Arduinom nie je prebraný od vynálezcov pôvodnej verzie robota. Vytvoril ho špeciálne pre účely denného tábora školiteľ tejto práce, Mgr. Pavel Petrovič, PhD. V najnovšej verzii (21.11.2018) sú v zásade možné dva varianty interakcie s robotom. Možno ho ovládať priamo, teda robot vykonáva príkazy prijaté cez sériový port ihneď. Takéto povely sú charakteru \uv{posuň motor A dopredu} alebo \uv{pípni}. Druhým prístupom je programovanie. Jedným z interpretovaných znakov --- príkazov je aj špeciálny znak na prechod do režimu programovania. Tu je možné zadať program ako postupnosť trojíc (doba čakania v milisekundách, číslo motora, rotácia motora v stupňoch) a niekoľkých špeciálnych príkazov (tiež ako trojice), ktoré umožňujú napríklad \uv{skoky} v programe (v podstate inštrukcia jump --- vykonávanie programu pokračuje zadaným riadkom kódu, za čo sa považuje každá takáto trojica). Súčasťou sú tiež trojice --- inštrukcie na prehranie melódie, prípadne zvukového efektu. Takto vytvorený program je ukladaný do pamäte RAM, v riadiacom programe vykonávanom v mikropočítači sú spomínané trojice reprezentované ako prvky poľa celých čísel. Programovanie je teda značne limitované veľkosťou pamäte, nie je prehľadné, a nakoľko program nemožno editovať, často nie je ani praktické. Výhodou však stále bezpochyby zostáva možnosť interakcie a tvorby choreografie bez znalosti C++.
+Program vykonávaný Arduinom nie je prebraný od vynálezcov pôvodnej verzie robota. Vytvoril ho špeciálne pre účely denného tábora školiteľ tejto práce, Mgr. Pavel Petrovič, PhD. Ako spomíname v úvode, jedná sa o program umožujúci programovanie robota bez znalosti C++. V najnovšej verzii (leto 2020) sú v zásade možné dva varianty interakcie s robotom.
+
+Robota možno ovládať priamo. V tomto režime zariadenie vykonáva príkazy (znaky) prijaté cez sériový port ihneď. (Príkazy sú v komunikácii reprezentované znakmi a riadiaci program ich po prečítaní interpretuje ako príkazy.) Takéto povely sú charakteru \uv{posuň motor A do polohy X} alebo \uv{pípni}. Možno tiež spustiť prehrávanie niektorej z predprogramovaných melódií alebo choreografií, ovládať mp3 prehrávač, kalibrovať pozície servomotorov a vytvorenú kalibráciu uložiť do pamäte EEPROM.
+
+Druhým prístupom je programovanie choreografií a ich následné spúšťanie. Jedným z interpretovaných znakov --- príkazov je aj špeciálny znak na prechod do režimu programovania. Tu je možné zadať program ako postupnosť trojíc (doba čakania v milisekundách, číslo motora, rotácia motora v stupňoch) a niekoľkých špeciálnych príkazov (tiež ako trojice), ktoré umožňujú napríklad \uv{skoky} v programe (v podstate inštrukcia jump --- vykonávanie programu pokračuje zadaným riadkom kódu, za čo sa považuje každá takáto trojica). Súčasťou sú tiež trojice --- inštrukcie na prehranie melódie, prípadne zvukového efektu. Takto vytvorený program je ukladaný do pamäte RAM, v riadiacom programe vykonávanom v mikropočítači sú spomínané trojice reprezentované ako prvky poľa celých čísel. Programovanie je teda značne limitované veľkosťou pamäte, nie je prehľadné, a nakoľko program nemožno dodatočne editovať, často nie je ani praktické. Výhodou však stále bezpochyby zostáva možnosť interakcie s robotom a tvorby choreografie bez znalosti C++ a tiež bez nutnosti kompilácie a nahratia riadiaceho programu pri zmene kompozície pohybov.
 
 % Mokrarosa
 \subsection{Robot Mokrarosa}
 Robot MoKraRosA (MOdulárny KRAhulský RObot S Arduinom) bol témou Denného tábora digitálnych technológií v roku 2019. Vyvinutý je od základu v dielni Fablab Bratislava kde bolo toho roku skonštruovaných 80 kusov s podobným cieľom ako predtým robot Otto \cite{Mokrarosa}.
 
 \subsubsection{Konštrukcia, možnosti, schopnosti}
-Telo robota Mokrarosa pripomína pavúka, aj keď má len štyri nohy. Aj tu bol použitý rovnaký modul pre senzor merania vzdialenosti od prekážky ktorý v dizajne imituje \uv{oči} prístroja. Pavúk je navyše osadený gyroskopom, ktorý mu umožňuje reagovať na preklopenie, prípadne pád. Konštrukcia dovoľuje nohami robota prevrátiť alebo vykonať kotúľ, pričom na základe údajov z gyroskopu môže vždy nasmerovať' nohy smerom k zemi a tak sa nikdy nedostane do polohy, z ktorej by nebol možný pohyb (na rozdiel od robota Otto). Štandardne je tiež osadený dvoma výstupnými zariadeniami, mp3 prehrávačom a reproduktorom.
+Telo robota Mokrarosa pripomína pavúka, aj keď má len štyri nohy. Aj tu bol použitý rovnaký modul pre senzor merania vzdialenosti od prekážky ktorý v dizajne imituje \uv{oči} prístroja. Pavúk je navyše osadený gyroskopom, ktorý mu umožňuje reagovať na preklopenie, prípadne pád. Konštrukcia dovoľuje nohami robota prevrátiť alebo vykonať kotúľ, pričom na základe údajov z gyroskopu môže vždy nasmerovať' nohy smerom k zemi a tak sa nikdy nedostane do polohy, z ktorej by nebol možný pohyb (na rozdiel od robota Otto). Štandardne je tiež osadený dvoma výstupnými zariadeniami, mp3 prehrávačom a reproduktorom. Robota možno vidieť na obrázku \ref{obr:mokrarosa}.
 
-TODO: obrazok Mokrarosa
+\begin{figure}
+\centerline{\includegraphics[width=0.4\textwidth]{images/mokrarosa}}
+\caption[Robot Mokrarosa]{Robot Mokrarosa}
+\label{obr:mokrarosa}
+\end{figure}
 
 \subsubsection{Riadiaci program, interakcia, programovanie}
-Riadiaci program pavúka je o niečo zložitejší. Umožňuje jednak robota riadiť \uv{po znakoch}, v tomto móde ihneď reaguje na symbol prijatý cez sériový port, obdobne ako v prípade robota Otto. V režime programovania sa výraznejšie líši. Program je daný ako postupnosť n-tíc kde každá n-tica vyjadruje v akej polohe (v stupňoch) sa má v daný moment daný motor nachádzať. Je tak možné hýbať s viacerými motormi naraz. Podstatný rozdiel je tiež v postupe programovania. Program je možné tvoriť tak, že robota postupne navádzame v režime \uv{po znakoch}, teda manuálnym pohybom jednotlivými motormi, do požadovanej polohy a následne uložíme stav --- natočenie každého z motorov do spomínanej n-tice. Takto postupne vytvárame \uv{pózy}, cez ktoré robot následne plynule prechádza.
+Riadiaci program pavúka je o niečo zložitejší. Umožňuje jednak robota riadiť \uv{po znakoch}, v tomto móde ihneď reaguje na symbol prijatý cez sériový port, obdobne ako v prípade robota Otto. V režime programovania sa výraznejšie líši. Program je daný ako postupnosť n-tíc kde každá n-tica vyjadruje v akej polohe (v stupňoch) sa má v daný moment daný motor nachádzať. Je tak možné hýbať s viacerými motormi naraz. Podstatný rozdiel je tiež v postupe programovania. Program je možné tvoriť tak, že robota postupne navádzame v režime \uv{po znakoch}, teda manuálnym pohybom jednotlivými motormi, do požadovanej polohy a následne uložíme stav --- natočenie každého z motorov do spomínanej n-tice. Takto postupne vytvárame \uv{pózy} --- konfigurácie, cez ktoré robot následne plynule prechádza.
 
 
 % ===
 % === Existujúce riešenia
 % ===
 \section{Existujúce riešenia}
-Jediné nám známe dostupné príbuzné riešenie, v súvislosti s robotmi Otto a Mokrarosa, pochádza priamo od tvorcov robota Otto, ktorí vyvinuli pomerne rozsiahlu aplikáciu na tvorbu jeho riadiacich programov. V prípade robota Mokrarosa podobné riešenia pochopiteľne neexistujú, nakoľko je len nedávnym produktom dielne Fablab Bratislava. Uvádzame však i iné riešenia súvisiace s výučbou robotiky a programovania.
+Jediné nám známe dostupné príbuzné riešenie súvisí s robotom Otto. Pochádza priamo od jeho tvorcov, ktorí vyvinuli pomerne rozsiahlu aplikáciu na tvorbu  riadiacich programov. Aplikácii sa venujeme v časti \ref{sub:OttoBlockly}. V prípade robota Mokrarosa podobné riešenia pochopiteľne neexistujú, nakoľko je len nedávnym produktom dielne Fablab Bratislava. Uvádzame však i iné produkty súvisiace s výučbou robotiky a programovaním robotov.
 
 \subsection{Otto Blockly}
-Ide o desktopovú aplikáciu umožňujúcu programovať robota Otto v grafickom jazyku, vytvorenom pomocou knižnice Google Blockly \cite{OttoBlockly}. Produktom sa možno vo viacerých aspektoch inšpirovať. Aplikácia je profesionálne graficky spracovaná, podporuje rôzne funkcie robota, ponúka okamžitý preklad vytvoreného kódu riadiaceho programu do C++, ktorý možno ľahko kompilovať a nahrať priamo do pripojeného mikropočítača Arduino.
+\label{sub:OttoBlockly}
+Ide o desktopovú aplikáciu z produkcie konštruktérov robota Otto, umožňujúcu programovať robota v grafickom jazyku, vytvorenom pomocou knižnice Google Blockly \cite{OttoBlockly}. Produktom sa možno vo viacerých aspektoch inšpirovať. Aplikácia je profesionálne graficky spracovaná, podporuje rôzne funkcie robota, ponúka okamžitý preklad vytvoreného kódu riadiaceho programu do C++, ktorý možno ľahko kompilovať a nahrať priamo do pripojeného mikropočítača Arduino. V grafickom jazyku sú k dispozícii prvky ovládajúce pokročilé funkcie rôznych verzií robota. Súčasťou sú predpripravené ukážkové kódy a tiež možnosť komunikácie cez sériový port. V čase vzniku tohoto textu je k dispozícii verzia 1.3.0.
 
 Nevýhodou pre nás je predovšetkým naviazanosť na robota z výroby autorov. Nami používaný klon robota Otto je modifikovaný a tak by pre použitie s aplikáciou bolo potrebné s každou zmenou zapojenia zmeniť aj logiku generátora kódu v aplikácii. Rovnako aplikácia nepodporuje štýl programovania kde sú vytvárané choreografie ukladané bez potreby kompilácie do pamäte RAM. Tento prístup je pritom mimoriadne výhodný pri častom ladení jednoduchých choreografii. 
 
 \subsection{Lego Mindstorms}
-TODO ( + alternatívy k mindstorms sw)
+Jedná sa o komplexnú stavebnicu umožňujúcu výstavbu a programovanie robota \cite{LegoMindstormsEducationSet}. Základom je riadiaca jednotka, do ktorej možno pripájať renzory a motory, avšak ich počet je v základnej verzii limitovaný dostupnými portami na maximálne štyri motory a štyri senzory, možno však dokúpiť \uv{rozbočky} a zapojiť i väčší počet. K stavebnici možno pripojiť rôzne receptory, gyroskop, kompas, svetelný či ultrazvukový senzor. Všetky periférie sú s riadiacou jednotkou spojené vodičmi zakončeniami pripomínajúcimi telefónne káble. Modularita systému je ohraničená dostupnými produktami ponúkanými firmou Lego, výber je rozmanitý, no komponenty nie sú až tak cenovo prívetivé. Pre porovanie uvádzame cenu ultrazvukového senzora --- Lego senzor 34,99€ \cite{LegoMindstormsUltrasonic} a senzor použitý pri stavbe robota Otto 1,90€ \cite{OttoUltrasonic}.
+
+K hardvéru ponúka Lego i prislúchajúci softvér na tvorbu riadiacich programov. Oficiálny program umožňuje programovanie v grafickom jazyku so špecifickými prvkami, reprezentujúcimi dostupné senzory a motory. Snahou tvorcov edukačných robotov však zvykne byť umožnenie pokiaľ možno plynulého prechodu programátorov od grafických jazykov k bežným textovým. V prípade robotov rady Mindstorms to umožňujú rôzne alternatívne programovacie platformy, kde možno riadiaci program tvoriť v jazyku Python (EV3Python) či C (RobotC) \cite{LegoAlternatives}.
+
+
+
+
+
+
+
+
+

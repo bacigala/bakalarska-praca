@@ -2,16 +2,23 @@
 
 \label{kap:ciel}
 
-Tu je opísaná charakteriastika predmetu riešenia, čiastkové a hlavné ciele s možnými pracovnými postupmi.
-
-\section{Požiadavky}
-todo
+Tu je opísaný predmet riešenia, požiadavky na výsledný produkt, čiastkové a hlavné ciele. Uvádzame tiež nápady na vypelšenie vznikajúceho softvéru, ktoré v prípade priaznivých (časových) podminok možno implementovať.
 
 \section{Primárny cieľ}
+Ústredným cieľom tejto práce je vytvorenie desktopovej aplikácie s grafickým používateľským prostredím (angl. GUI --- graphical user interface), ktoré uľahčí programovanie robotov Otto a Mokrarosa, opísaných v časti \ref{sec:OttoMokrarosa}. Ako prioritu stanovujeme podporu pre robota Otto, ktorý je konštrukciou o čosi jednoduchší. Programovanie zariadení máme v úmysle zjednodušiť najmä použtím GPJ (grafického programovacieh jazyka), o ktorom viac uvádzame v kapitole \ref{kap:GrafickyProgramovaciJayzk}.
+
+Inšpiráciou je nám predovšetkým aplikácia vytvorená konštruktérmi pôvodnej verzie robota Otto (Otto Bolockly --- časť \ref{sub:OttoBlockly}), ktorá spomínaný grafický jazyk využíva. V základnej verzii našej aplikácie je žiaduce vytvoriť prvky podporujúce funkcionality dostupné v aplikácii Otto Blockly. Jedná sa najmä o prvky obsiahnuté v GPJ, umožnujúce jednoduchý pohyb motormi, obsluhu senzorov, ale i komplexnejšie funkcie. V ďalšom je tiež potrebné umožniť kompilaciu vytvoreného kódu a jeho nahratie do riadacej jednotky robota. Nezabúdame ani na funkciu umožňujúcu jednoduchú sériovú komunikáciu s riadiacou jednotkou pripojením rozhrania USB a možnosť načítania predpripravených ukážkových programov.
+
+Výraznejšie sa odlíšiť od existujúcej aplikácie máme v pláne tvorbou modulu vizualizácie, v ktorom by bolo možné spúšťať vytvorené programy v jednoduchej simulácii a podporou tvorby choreografií ako postupnosti pohybov uchovávanej čisto v operačnej pamäti bez nutnosti kompilácie.
+
+\section{Požiadavky}
+Okrem základných (implicitných) požiadaviek na spolahnivosť a funkčnosť je dôležité zdôrazniť ďalšie, plynúce z určenia cieľovej skupiny používateľov novovzniknutej aplikácie. Používateľmi má byť najmä veková kategória 11-15 rokov, čo je pomerne siroké rozpätie. Potvrdila nám to i doc. PaedDr. Monika Tomcsányiová, PhD. z katedry didaktiky matematiky, fyziky a informatiky. Problémom je, že interval zahŕňa dve rôzne kognitívne vývinové štádiá žiakov, ktoré sa výrazne líšia, napríklad v schopnosti spracovať abstrakciu. Je teda potrebné aby aplkácia poskytla v GPJ prvky zohľadnujúce túto skutočnosť a mladším programátorom umožnila jednoduchšiu tvorbu kódu.
+
+\section{Možné rozšírenia}
+Uvádzame niekoľko nápadov, ktoré síce nie sú cieľmi tejto práce, no zaujali nás, a je možné ich v budúcnosti použiť na rozšírenie aplikácie.
+
+\subsubsection{CodeSnaps}
 todo
 
-\section{Možné rozšírenie}
-todo
-
-\subsection{CodeSnaps}
+\subsubsection{Modul pre kalibráciu}
 todo
