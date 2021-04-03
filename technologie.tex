@@ -34,22 +34,57 @@ Blockly pozostáva z dvoch hlavných častí, definícií blokov a definícií g
 
 Výhodou je vysoká prispôsobiteľnosť blokov po dizajnovej stránke, ale tiež možnosť konfigurácie spojov medzi dielikmi tak, aby vynucovali syntaktické pravidlá cieľového jazyka a vykonávali typové kontroly. Benefitom je tiež neutíchajúci aktívny vývoj a dostupnosť dokumentácie. Integrovanie knižnice do aplikácie tiež netvorí prekážku, nakoľko JavaScript možno spúšťať v prehliadačoch, ktoré sú bežnou súčasťou vývojových platforiem ako komponent \uv{WebView}. Knižnica je nasedená v mnohých kontextoch, osvedčená je v oblasti výučby (napríklad projektom Scratch) ale i robotiky, tu je dôkazom napríklad aplikácia RoboBlockly alebo už spomínaný projekt Otto Blockly (kapitola \ref{sub:OttoBlockly}) a aj preto sme sa rozhodli pre jej použitie v našej práci.
 
+
 %%%%%
 % %%%	Aplikácia
 %%%%%
 \section{Implementačný jazyk aplikácie}
-Pre implementáciu samotnej aplikácie sa ponúka niekoľko možností voľby programovacieho jazyka. Výber knižnice Blockly ako nástroja pre tvorbu vizuálneho jazyka nabáda k vývoju inernetovej aplikácie a nie desktopovej. Napriek tomu, že ide o JavaScript knižnicu, podriadujeme ju desktopovej aplikácií, nakoľko bežný internetový prehliadač nedisponuje funkciami potrebnými pre splnenie ďalších cieľov našej práce. Problematickou je napríklad komnikácia s robotom prostredníctom sériového portu, ku ktorému nezyvkne byť v prehliadačoch možný prístup pre bezpečnostné riziko. Rovnako môže byť komplikované spúšťať iné desktopové aplikácie prístupom k príkazovému riadku. Implementácia týchto funkcionalít v rámci internetovej aplikácie nie je nemožná, no vyžadovala by napríklad vývoj a inštaláciu rozšírení webových prehliadačov.
+Výber knižnice Blockly ako nástroja pre tvorbu vizuálneho jazyka nabáda k vývoju inernetovej aplikácie a nie desktopovej. Napriek tomu, že ide o JavaScript knižnicu, podriadujeme ju desktopovej aplikácií, nakoľko bežný internetový prehliadač nedisponuje funkciami potrebnými pre splnenie ďalších cieľov našej práce. Problematickou je napríklad komnikácia s robotom prostredníctom sériového portu, ku ktorému nezyvkne byť v prehliadačoch možný prístup pre bezpečnostné riziko. 
 
-Zohľadňujúc požadované funkcionality, popularitu jazykov a súsenosti autorov práce, je voľbou pre implementáciu jazyk Java.
+Rovnako môže byť komplikované spúšťať iné desktopové aplikácie (napríklad prístupom k príkazovému riadku), čo je nevyhnutné pre spustenie Arduino kompilátora po vytvorení riadiaceho programu. Implementácia týchto funkcionalít v rámci internetovej aplikácie nie je nemožná, no vyžadovala by napríklad vývoj a inštaláciu rozšírení webových prehliadačov.
 
-Java poskytuje rozsiahly systém na tvorbu grafickych používateľských rozhraní --- JavaFX. Ten umožňuje oddeliť v kóde definície logiky a vzhľadu (rozloženia), na ktoré slúži formát XML. Vzhľad a správanie jednotlivých grafických prvkov je pritom možné ľahko ovládať i v Java kóde. Súčasťou systému JavaFX je komponent webview, slúžiaci ako prehliadač, v ktorom možno spustiť grafické rozhranie knižnice Blockly a tiež dovoľuje obojsmernú komunikáciu medzi jazykom JavaScript a Java.
+Zohľadňujúc požadované funkcionality, popularitu jazykov a súsenosti autorov práce, je voľbou pre implementáciu jazyk Java. Java poskytuje rozsiahly systém na tvorbu grafickych používateľských rozhraní --- JavaFX. Ten umožňuje oddeliť v kóde definície logiky a vzhľadu (rozloženia), na ktoré slúži formát XML. Vzhľad a správanie jednotlivých grafických prvkov je pritom možné ľahko ovládať i v Java kóde. Súčasťou systému JavaFX je komponent webview, slúžiaci ako prehliadač, v ktorom možno spustiť grafické rozhranie knižnice Blockly a tiež dovoľuje obojsmernú komunikáciu medzi jazykom JavaScript a Java.
 
-\section{Komunikácia s robotom - jSerial}
+Java tiež umožňuje ľahko spúšťať externé programy a komunikovať s nimi prostredníctvom ich CLI. Nechýbajú v nej ani mechanizmy na komunikáciu cez sériový port.
+
+
+%%%%%
+% %%%	Vizualizácia
+%%%%%
+\section{Vizualizácia}
+Vizualizácia stavu robota a spúšťanie vytvorených programov v jednoduchej simulácii je jednou zo zamýšlaných funkcionalít našej aplikácie. Priamočiarym postupom implementácie je použitie API ako Vulkan alebo OpenGL pre kamunikácou s GPU a návrh grafických prvkov od základu. Takto by však bolo nutné vytvoriť pomerne rozsiahly modul na nízkej úrovni, čo nie je pre našu jednoduchú simuláciu nutné. Existuje hneď niekoľko riešení vyššej úrovne, ponúka sa použitie rôznych knižníc, simulárotov či herných programov.
+
+% Simulátor
+\subsection{Simulátor}
+Prirodzeným prístupom k riešeniu modulu simulácie je použitie existujúceho robotického simulátora. K dispozícii je ich hneď niekoľko, keďže sa bežne používajú ako pomôcka na testovacie účely pred skonštruovaním zariadení.
+
+\textit{Webots} je jednym z dostupných simulátorov. Ide o open--source desktopovú aplikáciu umožnujúcu navyše i modelovanie a programvanie prístrojov \cite{Webots}. Program robta môze byť vytvorený v rôznych jazykoch (C, C++, Python , Java, MATLAB, ROS), prostredie simlácie možno upravovať v jazyku VRML97 (Virtual Reality Modeling Language). Súčasťou je podpora senzorov a simulácia fyzikálnych javov.
+
+Ďalšími známymi simulátormi sú Gazebo, Visual Components, RoboDK, V-REP, RobotStudio, WorkcellSimulator či RoboLogix. Jedná sa však o programovacie nástroje, zväčša komplexné a hlavne samostatné aplikácie s vlastným GUI, umožňujú detailnú simuláciu a pre účely jednoduchej vizualizácie nie sú vhodné. Od ich použitia nás odrádza nie len zbytočne vysoká komplexita ale i komplikáce spojené s integráciou do našej aplikácie.
+
+% Game engine
+\subsection{Herný program}
+Herné programy (angl. game engines) poskytujú iný prístup k riešeniu modulu simulácie. Zvyčajne sú v nich k dospozícii všetky potrebné funkcionality bežne prítomne v už spomínaných simulátoroch (niektoré simulátory sú dokonca založené na hernom programe). Rovako poskytujú nástroje pre konštrukciu a vykreslenie trojrozmerného virtuálneho prostredia, do ktorého možno pridávať ďalšie obejkty. V celom prostredí možno uplatňovať a simulovať fyzikálne zákony a javy ako gravitácia, trenie či zrýchlenie. \uv{Herný} charakter týchto produktov je zvyčajne viditeľný najmä v poskytovaných funkcionalitách ako podpora sieťovej komunikácie či rozoznávanie gest zadaných užívateľom.
+
+Najväčšou výhodou je pomerne jednoduchá integrácia do aplikácie, keďže herné programy majú tiež formu softvérových rámcov a knižníc. Po stanovení implementačného jazyka je vhodné nájsť \uv{hernú knižnicu} vytvorenú v rovnakom jazyku. Inšpiráciou sú nám odoprúčania uvedené na stránke LWJGL (Lightweight Java Game Library), knižnice, ktorá umožňuje v Java aplikáciach prístup k spomínaným API ako OpenGL či Vulkan \cite{LWJGL}. Tu autori pre začínajúcuch vývojárov v oblasti sami odporúčajú použitie herných programov postavených na tejto knižnici. Spomínané sú dva --- LibGDX a jMonkeyEngine.
+
+\subsubsection{LibGDX}
 todo
 
-\section{Kompilátor - Blockly a Arduino kompilátor}
+\subsubsection{jMonkeyEngine}
 todo
 
-\section{Vizualizácia - jMonkeyEngine || LibGdx}
-todo
+
+
+
+
+
+
+
+
+
+
+
+
+
 
