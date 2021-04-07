@@ -4,7 +4,7 @@
 Kapitola pojednáva o voľbe vhodných technológii pre implementáciu jednotlivých cieľov práce. Detailom implementácie s použitím tu opísaných technológií je venovaná nasledujúca kapitola \ref{kap:implementacia}.
 
 %%%%%
-% %%%	Editor kódu
+% %%% Editor kódu
 %%%%%
 \section{Editor kódu}
 \label{kap:GrafickyProgramovaciJayzk}
@@ -12,17 +12,17 @@ Nakoľko je možnosť tvorby riadiaceho programu robota v grafickom programovaco
 
 Koncept vizuálnych programovacích jazykov nie je novinkou. Začiatky rozvoja v tejto oblasti možno badať už v šesťdesiatych rokoch minulého storočia s nástupom počítačovej grafiky samotnej \cite{boshernitsan2004visual}. Myšlienka je to pritom takmer prirodzená, obrazové vnímanie je človeku blízke, vizuálne vnemy si ľahšie pamätáme, sú intuitívne. Ako označenie napovedá, tento typ jazyka sa vyznačuje práve tým, že nie je tvorený textovými prvkami, ako mnohé bežné jazyky. Elementy, z ktorých možno tvoriť program sú grafické, ide teda zväčša o rôzne ikony, šípky, obrazce či diagramy, ktorých rozmiestením a prepojením tvoríme logiku programu.
 
-Dnes je táto oblasť rozvinutá a vizuálne jazyky vieme klasifikovať do niekoľkých kategórií. Zaujínavou je kategória takzvaných \uv{čistých} vizuálnych jazykov, ktoré sú kompilované z vizuálnej formy priamo do strojového kódu. Pre našu aplikáciu je však podstatná druhá z hlavných kategórií, obsahujúca \uv{hybridné textovo-vizuálne systémy}, do ktorej spadajú i tie umožňujúce tvorbu programu vo vizuálnej podobe, ktorá je ale následne preložená do textovej reprezentácie v niektorom z textových jazykov. Práve tento koncept je pre našu aplikáciu vhodný, vytvoríme vizuálny jazyk s adekvátnymi prvkami, preložiteľnými to jazyka C, ktorému \uv{rozumejú} riadiace jednotky robotov.
+Dnes je táto oblasť rozvinutá a vizuálne jazyky vieme klasifikovať do niekoľkých kategórií. Zaujímavou je kategória takzvaných \uv{čistých} vizuálnych jazykov, ktoré sú kompilované z vizuálnej formy priamo do strojového kódu. Pre našu aplikáciu je však podstatná druhá z hlavných kategórií, obsahujúca \uv{hybridné textovo-vizuálne systémy}, do ktorej spadajú i tie umožňujúce tvorbu programu vo vizuálnej podobe, ktorá je ale následne preložená do textovej reprezentácie v niektorom z textových jazykov. Práve tento koncept je pre našu aplikáciu vhodný, vytvoríme vizuálny jazyk s adekvátnymi prvkami, preložiteľnými to jazyka C, ktorému \uv{rozumejú} riadiace jednotky robotov.
 
 Potenciál vizuálnych jazykov je predovšetkým v možnosti interaktívnej tvorby kódu (napríklad formou drag and drop), ich názornosti a jednoduchosti umožňujúcej v prípade potreby vysokú abstrakciu od textovo orientovaného jazyka, do ktorého sú prekladané. V mnohých prípadoch sú tak ideálnym riešením pre začínajúcich programátorov aj ako istý medzistupeň pri výučbe programovania v textovom jazyku. V porovnaní s textovou formu sú vizuálne jazyky v nevýhode hlavne v komplexite, obrazová reprezentácia viac zaťažuje pamäť i procesor. S narastajúcou dĺžkou kódu môžu byť tiež menej prehľadné, ťažko udržiavateľné i rozšíriteľné.
 
 % LabVIEW
 \subsubsection{LabVIEW}
-Laboratory Virtual Instrument Engineering Workbench (LabVIEW) je výtvorom spoločnosti National Instruments, zaoberajúcou tvorbou softvéru a zariadení pre automatické testovanie. Produkt má širšie spektrum použitia, mimo iného je s jeho pomocou možno vytvárať riadiace programy pre vnorené systémy v jayzku G \cite{LabVIEW}.
+Laboratory Virtual Instrument Engineering Workbench (LabVIEW) je výtvorom spoločnosti National Instruments, zaoberajúcou tvorbou softvéru a zariadení pre automatické testovanie. Produkt má širšie spektrum použitia, mimo iného je s jeho pomocou možno vytvárať riadiace programy pre vnorené systémy v jazyku G \cite{LabVIEW}.
 
-Základným prvkom jazyka je takzvaný VI --- \uv{virtuálny prístroj} (angl. Virtual Instrument). VI môže predstavovať celý program alebo byť súčasťou väčšieho programu. Pre každý VI používateľ definuje prvky \uv{predného panela}, zobrazujúceho stav prístroja. Pomocou panela je tiež možné definovať vstupy a po výpočte zísakať výstupné hodnoty. VI ďalej tvorí \uv{diagram blokov}, definujúci správanie VI vo vizuálnej podobe. Bloky reprezentujú funkcie, k dispozícii sú rôzne, od jednosuchých aritmetických operácií až po komplexnejšie. V diagrame je umožnený prístup k vstupom definovaným prostredictvom predného panela. Bloky sú prepájané \uv{vodičmi}, reprezenovanými čiarami, znázorňujúcimi tok dát. Postup vyhodnocovania vstupu je založený na dostupnosti dát --- blok sa vyhodnotí v momente, keď sú preň dostupné všetky vstupné hodnoty a výsledok je následne dostupný pre ďalšie prepojené bloky alebo odoslaný na výstup (predný panel).
+Základným prvkom jazyka je takzvaný VI --- \uv{virtuálny prístroj} (angl. Virtual Instrument). VI môže predstavovať celý program alebo byť súčasťou väčšieho programu. Pre každý VI používateľ definuje prvky \uv{predného panela}, zobrazujúceho stav prístroja. Pomocou panela je tiež možné definovať vstupy a po výpočte získať výstupné hodnoty. VI ďalej tvorí \uv{diagram blokov}, definujúci správanie VI vo vizuálnej podobe. Bloky reprezentujú funkcie, k dispozícii sú rôzne, od jednoduchých aritmetických operácií až po komplexnejšie. V diagrame je umožnený prístup k vstupom definovaným prostredníctvom predného panela. Bloky sú prepájané \uv{vodičmi}, reprezentovanými čiarami, znázorňujúcimi tok dát. Postup vyhodnocovania vstupu je založený na dostupnosti dát --- blok sa vyhodnotí v momente, keď sú preň dostupné všetky vstupné hodnoty a výsledok je následne dostupný pre ďalšie prepojené bloky alebo odoslaný na výstup (predný panel).
 
-Na LabVIEW je založená aplikácia firmy Lego na tvorbu riadiacich programov robota Mindstorm (kapitola \ref{sub:LegoMindstorms}). Nevýhodou pre našu aplikáciu je najmä spoplatnenie tohoto softvéru, napriek tomu je to jedno z možných riešení.
+Na LabVIEW je založená aplikácia firmy Lego na tvorbu riadiacich programov robota Mindstorm (kapitola \ref{sub:LegoMindstorms}). Nevýhodou pre našu aplikáciu je najmä spoplatnenie tohto softvéru, napriek tomu je to jedno z možných riešení.
 
 % Blockly
 \subsubsection{Blockly}
@@ -36,55 +36,46 @@ Výhodou je vysoká prispôsobiteľnosť blokov po dizajnovej stránke, ale tie�
 
 
 %%%%%
-% %%%	Aplikácia
+% %%% Aplikácia
 %%%%%
 \section{Implementačný jazyk aplikácie}
-Výber knižnice Blockly ako nástroja pre tvorbu vizuálneho jazyka nabáda k vývoju inernetovej aplikácie a nie desktopovej. Napriek tomu, že ide o JavaScript knižnicu, podriadujeme ju desktopovej aplikácií, nakoľko bežný internetový prehliadač nedisponuje funkciami potrebnými pre splnenie ďalších cieľov našej práce. Problematickou je napríklad komnikácia s robotom prostredníctom sériového portu, ku ktorému nezyvkne byť v prehliadačoch možný prístup pre bezpečnostné riziko. 
+Výber knižnice Blockly ako nástroja pre tvorbu vizuálneho jazyka nabáda k vývoju internetovej aplikácie a nie desktopovej. Napriek tomu, že ide o JavaScript knižnicu, podriaďujeme ju desktopovej aplikácií, nakoľko bežný internetový prehliadač nedisponuje funkciami potrebnými pre splnenie ďalších cieľov našej práce. Problematickou je napríklad komunikácia s robotom prostredníctvom sériového portu, ku ktorému nezvykne byť v prehliadačoch možný prístup pre bezpečnostné riziko. 
 
 Rovnako môže byť komplikované spúšťať iné desktopové aplikácie (napríklad prístupom k príkazovému riadku), čo je nevyhnutné pre spustenie Arduino kompilátora po vytvorení riadiaceho programu. Implementácia týchto funkcionalít v rámci internetovej aplikácie nie je nemožná, no vyžadovala by napríklad vývoj a inštaláciu rozšírení webových prehliadačov.
 
-Zohľadňujúc požadované funkcionality, popularitu jazykov a súsenosti autorov práce, je voľbou pre implementáciu jazyk Java. Java poskytuje rozsiahly systém na tvorbu grafickych používateľských rozhraní --- JavaFX. Ten umožňuje oddeliť v kóde definície logiky a vzhľadu (rozloženia), na ktoré slúži formát XML. Vzhľad a správanie jednotlivých grafických prvkov je pritom možné ľahko ovládať i v Java kóde. Súčasťou systému JavaFX je komponent webview, slúžiaci ako prehliadač, v ktorom možno spustiť grafické rozhranie knižnice Blockly a tiež dovoľuje obojsmernú komunikáciu medzi jazykom JavaScript a Java.
+Zohľadňujúc požadované funkcionality, popularitu jazykov a skúseností autorov práce, je voľbou pre implementáciu jazyk Java. Java poskytuje rozsiahly systém na tvorbu grafických používateľských rozhraní --- JavaFX. Ten umožňuje oddeliť v kóde definície logiky a vzhľadu (rozloženia), na ktoré slúži formát XML. Vzhľad a správanie jednotlivých grafických prvkov je pritom možné ľahko ovládať i v Java kóde. Súčasťou systému JavaFX je komponent webview, slúžiaci ako prehliadač, v ktorom možno spustiť grafické rozhranie knižnice Blockly a tiež dovoľuje obojsmernú komunikáciu medzi jazykom JavaScript a Java.
 
 Java tiež umožňuje ľahko spúšťať externé programy a komunikovať s nimi prostredníctvom ich CLI. Nechýbajú v nej ani mechanizmy na komunikáciu cez sériový port.
 
 
 %%%%%
-% %%%	Vizualizácia
+% %%% Vizualizácia
 %%%%%
 \section{Vizualizácia}
-Vizualizácia stavu robota a spúšťanie vytvorených programov v jednoduchej simulácii je jednou zo zamýšlaných funkcionalít našej aplikácie. Priamočiarym postupom implementácie je použitie API ako Vulkan alebo OpenGL pre kamunikácou s GPU a návrh grafických prvkov od základu. Takto by však bolo nutné vytvoriť pomerne rozsiahly modul na nízkej úrovni, čo nie je pre našu jednoduchú simuláciu nutné. Existuje hneď niekoľko riešení vyššej úrovne, ponúka sa použitie rôznych knižníc, simulárotov či herných programov.
+Vizualizácia stavu robota a spúšťanie vytvorených programov v jednoduchej simulácii je jednou zo zamýšľaných funkcionalít našej aplikácie. Priamočiarym postupom implementácie je použitie API ako Vulkan alebo OpenGL pre komunikáciu s GPU a návrh grafických prvkov od základu. Takto by však bolo nutné vytvoriť pomerne rozsiahly modul na nízkej úrovni, čo nie je pre našu jednoduchú simuláciu nutné. Existuje hneď niekoľko riešení vyššej úrovne, ponúka sa použitie rôznych knižníc, simulátorov či herných programov.
 
 % Simulátor
 \subsection{Simulátor}
 Prirodzeným prístupom k riešeniu modulu simulácie je použitie existujúceho robotického simulátora. K dispozícii je ich hneď niekoľko, keďže sa bežne používajú ako pomôcka na testovacie účely pred skonštruovaním zariadení.
 
-\textit{Webots} je jednym z dostupných simulátorov. Ide o open--source desktopovú aplikáciu umožnujúcu navyše i modelovanie a programvanie prístrojov \cite{Webots}. Program robta môze byť vytvorený v rôznych jazykoch (C, C++, Python , Java, MATLAB, ROS), prostredie simlácie možno upravovať v jazyku VRML97 (Virtual Reality Modeling Language). Súčasťou je podpora senzorov a simulácia fyzikálnych javov.
+\textit{Webots} je jedným z dostupných simulátorov. Ide o open--source desktopovú aplikáciu umožňujúcu navyše i modelovanie a programovanie prístrojov \cite{Webots}. Program robota môže byť vytvorený v rôznych jazykoch (C, C++, Python , Java, MATLAB, ROS), prostredie simulácie možno upravovať v jazyku VRML97 (Virtual Reality Modeling Language). Súčasťou je podpora senzorov a simulácia fyzikálnych javov.
 
-Ďalšími známymi simulátormi sú Gazebo, Visual Components, RoboDK, V-REP, RobotStudio, WorkcellSimulator či RoboLogix. Jedná sa však o programovacie nástroje, zväčša komplexné a hlavne samostatné aplikácie s vlastným GUI, umožňujú detailnú simuláciu a pre účely jednoduchej vizualizácie nie sú vhodné. Od ich použitia nás odrádza nie len zbytočne vysoká komplexita ale i komplikáce spojené s integráciou do našej aplikácie.
+Ďalšími známymi simulátormi sú Gazebo, Visual Components, RoboDK, V-REP, RobotStudio, WorkcellSimulator či RoboLogix. Jedná sa však o programovacie nástroje, zväčša komplexné a hlavne samostatné aplikácie s vlastným GUI, umožňujú detailnú simuláciu a pre účely jednoduchej vizualizácie nie sú vhodné. Od ich použitia nás odrádza nie len zbytočne vysoká komplexita ale i komplikácie spojené s integráciou do našej aplikácie.
 
 % Game engine
 \subsection{Herný program}
-Herné programy (angl. game engines) poskytujú iný prístup k riešeniu modulu simulácie. Zvyčajne sú v nich k dospozícii všetky potrebné funkcionality bežne prítomne v už spomínaných simulátoroch (niektoré simulátory sú dokonca založené na hernom programe). Rovako poskytujú nástroje pre konštrukciu a vykreslenie trojrozmerného virtuálneho prostredia, do ktorého možno pridávať ďalšie obejkty. V celom prostredí možno uplatňovať a simulovať fyzikálne zákony a javy ako gravitácia, trenie či zrýchlenie. \uv{Herný} charakter týchto produktov je zvyčajne viditeľný najmä v poskytovaných funkcionalitách ako podpora sieťovej komunikácie či rozoznávanie gest zadaných užívateľom.
+Herné programy (angl. game engines) poskytujú iný prístup k riešeniu modulu simulácie. Zvyčajne sú v nich k dispozícii všetky potrebné funkcionality bežne prítomne v už spomínaných simulátoroch (niektoré simulátory sú dokonca založené na hernom programe). Rovnako poskytujú nástroje pre konštrukciu a vykreslenie trojrozmerného virtuálneho prostredia, do ktorého možno pridávať ďalšie objekty. V celom prostredí možno uplatňovať a simulovať fyzikálne zákony a javy ako gravitácia, trenie či zrýchlenie. \uv{Herný} charakter týchto produktov je zvyčajne viditeľný najmä v poskytovaných funkcionalitách ako podpora sieťovej komunikácie či rozoznávanie gest v GUI.
 
-Najväčšou výhodou je pomerne jednoduchá integrácia do aplikácie, keďže herné programy majú tiež formu softvérových rámcov a knižníc. Po stanovení implementačného jazyka je vhodné nájsť \uv{hernú knižnicu} vytvorenú v rovnakom jazyku. Inšpiráciou sú nám odoprúčania uvedené na stránke LWJGL (Lightweight Java Game Library), knižnice, ktorá umožňuje v Java aplikáciach prístup k spomínaným API ako OpenGL či Vulkan \cite{LWJGL}. Tu autori pre začínajúcuch vývojárov v oblasti sami odporúčajú použitie herných programov postavených na tejto knižnici. Spomínané sú dva --- LibGDX a jMonkeyEngine.
+Najväčšou výhodou je pomerne jednoduchá integrácia do aplikácie, keďže herné programy majú tiež formu softvérových rámcov a knižníc. Po stanovení implementačného jazyka je vhodné nájsť \uv{hernú knižnicu} vytvorenú v rovnakom jazyku. Inšpiráciou sú nám odporúčania uvedené na stránke LWJGL (Lightweight Java Game Library), knižnice, ktorá umožňuje v Java aplikáciach prístup k spomínaným API ako OpenGL či Vulkan \cite{LWJGL}. Tu autori pre začínajúcich vývojárov v oblasti sami odporúčajú použitie herných programov postavených na tejto knižnici. Spomínané sú dva --- LibGDX a jMonkeyEngine.
 
 \subsubsection{LibGDX}
-todo
+LibGDX je softvérovým rámcom (angl. framework), umožňujúcim vývoj hier pre viacero platforiem súčasne. Založený je na OpenGL, kód je zverejnený v duchu open-source a licencia Apache 2.0 nás od jeho použitia rovnako neodrádza. Pre používateľov --- začiatočníkov je k dispozícii rozsiahla dokumentácia (Javadoc) a rôzne návody. Zaujímavosťou je aplikácia na vytvorenie základnej kostry výslednej \uv{hry} (u nás simulácie), ktorá po zadaní niekoľkých parametrov výrazne uľahčí úvodné nastavenie a možno tak rýchlo prejsť k vývoju hry samotnej (ako herná logika či rozmiestnenie objektov) \cite{LibGDXProjectGenerator}.
 
 \subsubsection{jMonkeyEngine}
-todo
+jMonkeyEngine (ďalej ako \uv{jME}) je možné k projektu ľahko pridať vo forme knižníc pomocou nástroja Maven. Podobne ako LibGDX nás v jeho použití neobmedzuje ani licencia (pripojená BSD 3-Clause licencia umožňuje použitie produktu s modifikáciou i na komerčné účely) ani poskytnuté funkcionality. Nechýba dokumentácia, návody pre začiatočníkov, vlastný SDK a IDE.
 
+Oba herné programy pokrývajú naše požiadavky a na internetových fórach je ich možné veľakrát nájsť ako ekvivalenty, pre ktoré sa pri vývoji hry ťažko rozhodnúť. Častým odporúčaním však je voľba jME, ak má byť výsledný produkt zameraný prevažne na trojrozmernú grafiku, čo platí aj v našom prípade.
 
+K výberu jME, ako technológie pre implementáciu simulácie, prispel i článok priamo opisujúci simulátor robotov vytvorený pomocou jME --- jmeSim \cite{jmeSim}. I keď je údajne tento simulátor open--source, nedopátrali sme sa k jeho zdrojovému kódu. Napriek tomu považujeme článok za dôkaz, že má zmysel snažiť sa o simuláciu v hernom programe, a jME je pre tento účel použiteľnou technológiou.
 
-
-
-
-
-
-
-
-
-
-
-
-
+Integrovať simuláciu do našej aplikácie pomôžu existujúce riešenia ako JME3-JFX \cite{jmejfx}, ktoré umožňujú vykresľovanie grafického obsahu (simulácie v jME) priamo do komponentu JavaFX scény.
