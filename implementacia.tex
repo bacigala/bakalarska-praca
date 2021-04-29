@@ -3,12 +3,11 @@
 
 V kapitole opisujeme priebeh vzniku aplikácie, implementačné detaily, postupy a rozhodnutia. Základné členenie obsahu je podľa modulov, za ktoré považujeme celky aplikácie ako editor kódu v grafickom jazyku, modul pre sériovú komunikáciu či modul pre simuláciu. V rámci jednotlivých častí je opísaný ich vývoj pokiaľ možno chronologicky. Súčasťou sú tiež implementačne zmeny v riadiacich programoch robotov.
 
-\section{Desktopová aplikácia}
 Vývoj začíname návrhom kostry a vizuálnej podoby aplikácie, v ktorej neskôr vzniknú jednotlivé moduly. V prvej fáze implementujeme časti podporujúce komunikáciu s aktuálnou verziou riadiaceho programu robota Otto a jeho programovanie. Nasleduje etapa rozširovania funkcionalít (hlavne grafického jazyka)  a práca na module simulácie.
 
 
 % GUI
-\subsection{Grafické rozhranie}
+\section{Grafické rozhranie}
 GUI aplikácie tvoríme pomocou JavaFX. Cieľom je vytvoriť prehľadné prostredie, v ktorom sa ľahko zorientuje i požívateľ nižšieho veku. Pri rozmiestňovaní jednotlivých prvkov sú nám nápomocné existujúce aplikácie, no zohľadňujeme i rady autorov knižnice Blockly \cite{blocklyBestPractices}, keďže komponent umožňujúci prostredníctvom nej programovať robota je v našej aplikácii dominantným. Z odporúčaní je zrejmé, že plochu pre manipuláciu s prvkami grafického jazyka je žiaduce maximalizovať a neoddeľovať ju od komponentu umožňujúceho tvorbu blokov (prvkov jazyka).
 
 Ďalšie prvky vyžadujúce v aplikácii väčšiu plochu sú najmä výstupné, predovšetkým ide o výstup pre modul simulácie a výstup \uv{prekladača} grafického jazyka na kód následne kompilovaný a odosielaný do riadiacej jednotky robota. Taktiež je nutné zakomponovať do GUI modul pre komunikáciu s robotom, konzolu sériovej komunikácie.
@@ -25,23 +24,47 @@ Prípadná zmena usporiadania komponentov nie je v JavaXF zdĺhavou záležitos�
 
 
 % Editor kódu
-\subsection{Editor kódu}
-aka blokové paradigmy, odporúčania tvorcov, uvedomiŤ si kto je publikum, šetriť s počtom blokov, zobraziť len tie čo sa aktuálne dajú použiť
+\section{Editor kódu}
+aka blokové paradigmy, odporúčania tvorcov, uvedomiť si kto je publikum, šetriť s počtom blokov, zobraziť len tie čo sa aktuálne dajú použiť
 
-\subsubsection{Obrazový programovací jazyk}
+\subsection{Obrazový programovací jazyk}
 - granularita puzzle
 - pre rozne vekove kategorie (na zaklade poziadaviek)
 - premenne - problem s typmi
 
 
-
 % Vizualizacia
-\subsection{Vizualizácia}
+\section{Vizualizácia}
+Implementáciu modulu vizualizácie začíname integráciou grafického prvku zobrazujúceho výstup simulácie v používateľskom rozhraní našej aplikácie. Herný charakter použitej technológie jMonkeyEngine (skr. jME, kapitola \ref{sub:herny-program}) umožňuje jednoduché vytvorenie aplikácie --- hry, ktorej jediné grafické okno pozostáva z výstupu simulácie. V našom prípade je ale simulácia len \uv{doplnkom}, rozhodli sme sa ju preto integrovať do hlavného okna našej aplikácie vo vymedzenom priestore, ako vidno na obrázku \ref{obr:gui-layout}. K tomuto účelu je nám nápomocné riešenie \textit{JME3--JFX} \cite{jmejfx}, ktoré umožňuje vykresľovanie grafického výstupu simulácie v jME priamo do komponentu \textit{ImageView} JavaFX scény. Samotná integrácia je potom už len jednoduchým volaním metódy prepájajúcej inštanciu jME s inštanciou ImageView.
+
+V ďalšom je potrebné vyskladať model robota Otto a samotnú scénu --- prostredie, v ktorom sa bude simulovaný model pohybovať. Pre účely jednoduchej simulácie scénu v základe tvorí rovná plocha. V jazyku jME to znamená vytvorenie jedného širokého hlbokého nízkeho kvádra a jeho umiestnenie do stredu scény. Hornú stenu vzniknutej \uv{podlahy} možno vidieť na obrázkoch \ref{obr:otto-without-collision} a \ref{obr:otto-with-collision} pod modelom robota.
+
+\subsection{Model robota Otto}
 todo, tinkerpad, 3d tlac - existujuce modely
 - 1.pokus: zobrazenie fixne, rotacia jednotlivych casti
 - problemy s fyzikou, komplexita mesh collision shape -> riesenie je boxCollisionShape
 - jonts = servo?
 - obrazky - motor 130 deg.
+
+OTTO
+ - animacia = moyna len prednahrata, pred nas nepouzitelne
+ - nodes .. create pivot points of rotation (1. pokus)
+ - 2.pokus = pivot points reprezentovane hinges a riadenie hinge SW
+ - BulletAppState = objekt pre interakciu s intergoovanzm jBullet
+- register to physisc space ˇ(of te bullappstste)
+reg. do phy. = tvar a mass
+bulletAppState.setDebugEnabled(true);
+use setPhysicsLocation() instead of setLocalTranslation() now, since you are dealing with a physical object.
+geometria dostane control!
+dynamic PhysicsControl, you can use setLinearVelocity() and apply forces and torques to it
+animacia = vztvorenie modelu, bones, nasledna deformacia mesh v yavislosti od poyicie kosti, Jme = len predpripravene animacie
+
+
+\subsection{Kamera --- }
+camera movement
+
+
+
 
 \begin{figure}
 \centerline{\includegraphics[width=0.4\textwidth]{images/otto-without-collision}}
@@ -57,7 +80,7 @@ todo, tinkerpad, 3d tlac - existujuce modely
 
 
 % Komunikacia
-\subsection{Komunikácia s robotom}
+\section{Komunikácia s robotom}
 Možnosť komunikácie s robotom je jednou zo základných požiadaviek na našu aplikáciu. Umožňuje vyššiu interakciu s používateľom a je tiež nápomocná pri ladení programov (pomocné výpisy). Komunikácia s robotom na úrovni nahratia kompilovaného programu je predmetom časti \ref{sub:arduinoIDE}, tu je opísaná sériová komunikácia už bežiaceho programu v mikropočítači Arduino s našou aplikáciou. Jedná sa o komplementárnu časť systému k časti implementovanej v mikropočítači (sekcia \ref{sub:arduino}).
 
 \subsubsection{Komunikácia zo strany aplikácie}
@@ -69,7 +92,7 @@ Odosielanie správ je rovnako možné nastaviť do blokujúceho režimu, kde pri
 
 
 % Kompilácia a upload
-\subsection{Kompilácia a nahranie riadiaceho programu}
+\section{Kompilácia a nahranie riadiaceho programu}
 \label{sub:arduinoIDE}
 Kompiláciu a nahranie riadiaceho programu pri vývoji programov pre Arduino zvyčajne zabezpečuje Arduino IDE s grafickým používateľským rozhraním (sekcia \ref{sub:arduino}). Nahrávanie kompilovaného programu prebieha sériovou komunikáciou medzi Arduino IDE a bootloader programom v mikropočítači, zodpovednom za uloženie prijatého kódu do flash pamäte \cite{sketchUpload}. Overenie prenosu je uskutočnené spätným odoslaním celého programu z mikropočítača do IDE. Bootloader je spustený len určitý (krátky) čas po resetovaní procesora, ak v tomto časovom okne nie je zaznamenané nahrávanie riadiaceho programu, spustí sa posledný nahraný program. Procesor je resetovaný po obnove napájania ale i pri nadviazaní nového sériového spojenia.
 
