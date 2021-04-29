@@ -6,7 +6,9 @@ V kapitole opisujeme priebeh vzniku aplikácie, implementačné detaily, postupy
 Vývoj začíname návrhom kostry a vizuálnej podoby aplikácie, v ktorej neskôr vzniknú jednotlivé moduly. V prvej fáze implementujeme časti podporujúce komunikáciu s aktuálnou verziou riadiaceho programu robota Otto a jeho programovanie. Nasleduje etapa rozširovania funkcionalít (hlavne grafického jazyka)  a práca na module simulácie.
 
 
-% GUI
+%%%%%
+% %%%    GUI
+%%%%%
 \section{Grafické rozhranie}
 GUI aplikácie tvoríme pomocou JavaFX. Cieľom je vytvoriť prehľadné prostredie, v ktorom sa ľahko zorientuje i požívateľ nižšieho veku. Pri rozmiestňovaní jednotlivých prvkov sú nám nápomocné existujúce aplikácie, no zohľadňujeme i rady autorov knižnice Blockly \cite{blocklyBestPractices}, keďže komponent umožňujúci prostredníctvom nej programovať robota je v našej aplikácii dominantným. Z odporúčaní je zrejmé, že plochu pre manipuláciu s prvkami grafického jazyka je žiaduce maximalizovať a neoddeľovať ju od komponentu umožňujúceho tvorbu blokov (prvkov jazyka).
 
@@ -23,7 +25,9 @@ Prípadná zmena usporiadania komponentov nie je v JavaXF zdĺhavou záležitos�
 \end{figure}
 
 
-% Editor kódu
+%%%%%
+% %%%    Editor kódu
+%%%%%
 \section{Editor kódu}
 aka blokové paradigmy, odporúčania tvorcov, uvedomiť si kto je publikum, šetriť s počtom blokov, zobraziť len tie čo sa aktuálne dajú použiť
 
@@ -33,35 +37,28 @@ aka blokové paradigmy, odporúčania tvorcov, uvedomiť si kto je publikum, še
 - premenne - problem s typmi
 
 
-% Vizualizacia
+%%%%%
+% %%%    Vizualizácia
+%%%%%
 \section{Vizualizácia}
 Implementáciu modulu vizualizácie začíname integráciou grafického prvku zobrazujúceho výstup simulácie v používateľskom rozhraní našej aplikácie. Herný charakter použitej technológie jMonkeyEngine (skr. jME, kapitola \ref{sub:herny-program}) umožňuje jednoduché vytvorenie aplikácie --- hry, ktorej jediné grafické okno pozostáva z výstupu simulácie. V našom prípade je ale simulácia len \uv{doplnkom}, rozhodli sme sa ju preto integrovať do hlavného okna našej aplikácie vo vymedzenom priestore, ako vidno na obrázku \ref{obr:gui-layout}. K tomuto účelu je nám nápomocné riešenie \textit{JME3--JFX} \cite{jmejfx}, ktoré umožňuje vykresľovanie grafického výstupu simulácie v jME priamo do komponentu \textit{ImageView} JavaFX scény. Samotná integrácia je potom už len jednoduchým volaním metódy prepájajúcej inštanciu jME s inštanciou ImageView.
 
 V ďalšom je potrebné vyskladať model robota Otto a samotnú scénu --- prostredie, v ktorom sa bude simulovaný model pohybovať. Pre účely jednoduchej simulácie scénu v základe tvorí rovná plocha. V jazyku jME to znamená vytvorenie jedného širokého hlbokého nízkeho kvádra a jeho umiestnenie do stredu scény. Hornú stenu vzniknutej \uv{podlahy} možno vidieť na obrázkoch \ref{obr:otto-without-collision} a \ref{obr:otto-with-collision} pod modelom robota.
 
+% Otto - model
 \subsection{Model robota Otto}
-todo, tinkerpad, 3d tlac - existujuce modely
-- 1.pokus: zobrazenie fixne, rotacia jednotlivych casti
-- problemy s fyzikou, komplexita mesh collision shape -> riesenie je boxCollisionShape
-- jonts = servo?
-- obrazky - motor 130 deg.
+Cieľom je vytvoriť model schopný pohybu vo vytvorenom prostredí. Rozhranie pre riadenie pohybu vytvárame analogicky rozhraniu v riadiacom programe pre Arduino, kde je pohyb motora evokovaný volaním funkcie s jediným parametrom, definujúcim požadovanú polohu v stupňoch. Pri vytváraní modelu sú nám nápomocné existujúce modely častí robota určené pre 3D tlač, z ktorých preberáme definície povrchových sietí. Model robota je následne vytvorený vhodným rozmiestnením sietí v scéne (ich zaradením do stromovej hierarchie uzlov). K zobrazeniu je nutné definovať použitie materiálov (kapitola \ref{subsub:jMonekyEngine}).
 
-OTTO
- - animacia = moyna len prednahrata, pred nas nepouzitelne
- - nodes .. create pivot points of rotation (1. pokus)
- - 2.pokus = pivot points reprezentovane hinges a riadenie hinge SW
- - BulletAppState = objekt pre interakciu s intergoovanzm jBullet
-- register to physisc space ˇ(of te bullappstste)
-reg. do phy. = tvar a mass
-bulletAppState.setDebugEnabled(true);
-use setPhysicsLocation() instead of setLocalTranslation() now, since you are dealing with a physical object.
-geometria dostane control!
-dynamic PhysicsControl, you can use setLinearVelocity() and apply forces and torques to it
-animacia = vztvorenie modelu, bones, nasledna deformacia mesh v yavislosti od poyicie kosti, Jme = len predpripravene animacie
+V základnej verzii je pohyb interpretovaný ako priama zmena rotácie konkrétneho uzla (geometrie) v scéne. Pre plynulý pohyb je implementovaná časť vykonávajúca interpoláciu medzi východiskovou a cieľovou polohou končatiny. Vzniknutý model je statický, pohyb modelu špičky nohy robota smerom k zemi preniká modelom podlahy a neovplyvňuje pohyb ostatných častí, tento stav možno vidieť na obrázku \ref{obr:otto-without-collision}.
+
+Aby bolo možné simulovať fyzikálne zákony, definujeme podlahe a jednotlivým častiam robota v jME fyzikálne ovládače. Pre vysokú detailnosť povrchových sietí sú pre účely simulácie fyziky definované zjednodušené kolízne tvary, dizajn robota umožňuje použitie kvádrov. Je tiež nutné zmeniť prístup k vykonávaniu pohybu, nakoľko manuálne nastavenie rotácie nie je počas svojho priebehu brané fyzikálnou simuláciou do úvahy. Možno tak vytvoriť fyzikálne nemožný stav (obrázok \ref{obr:otto-without-collision}), ktorý simuláciu znefunkční. Riešením pre simuláciu motorov je použitie kĺbov. Pomocou nich definujeme vzťahy medzi uzlami, osi rotácie a možnú mieru pohybu. Pohyb je následne vykonávaný periodickým nastavovaním uhlu zvieraného kĺbom, interpoláciou medzi východiskovou a cieľovou polohou končatiny. Výsledný efekt možno vidieť na obrázku \ref{obr:otto-with-collision}.
+
+% Kamera
+\subsection{Kamera}
 
 
-\subsection{Kamera --- }
-camera movement
+
+
 
 
 
@@ -79,7 +76,9 @@ camera movement
 \end{figure}
 
 
-% Komunikacia
+%%%%%
+% %%%    Komunikácia, serial
+%%%%%
 \section{Komunikácia s robotom}
 Možnosť komunikácie s robotom je jednou zo základných požiadaviek na našu aplikáciu. Umožňuje vyššiu interakciu s používateľom a je tiež nápomocná pri ladení programov (pomocné výpisy). Komunikácia s robotom na úrovni nahratia kompilovaného programu je predmetom časti \ref{sub:arduinoIDE}, tu je opísaná sériová komunikácia už bežiaceho programu v mikropočítači Arduino s našou aplikáciou. Jedná sa o komplementárnu časť systému k časti implementovanej v mikropočítači (sekcia \ref{sub:arduino}).
 
@@ -91,7 +90,9 @@ jSerialComm je platformovo nezávislá knižnica, ľahko integrovateľná do na�
 Odosielanie správ je rovnako možné nastaviť do blokujúceho režimu, kde pri pokuse o zápis do sériového portu knižnica čaká buď to určitý čas alebo kým sa podarí odoslať požadovaný počet bajtov. Pre implementáciu volíme neblokovaný prístup, ak používateľ odošle dáta, sú zapísané hneď ako je to možné. Neblokovaný prístup umožní odoslanie viacerých správ, ktoré následne v rovnakom poradí knižnica odvysiela.
 
 
-% Kompilácia a upload
+%%%%%
+% %%%    Kompilácia, upload, Arduino IDE
+%%%%%
 \section{Kompilácia a nahranie riadiaceho programu}
 \label{sub:arduinoIDE}
 Kompiláciu a nahranie riadiaceho programu pri vývoji programov pre Arduino zvyčajne zabezpečuje Arduino IDE s grafickým používateľským rozhraním (sekcia \ref{sub:arduino}). Nahrávanie kompilovaného programu prebieha sériovou komunikáciou medzi Arduino IDE a bootloader programom v mikropočítači, zodpovednom za uloženie prijatého kódu do flash pamäte \cite{sketchUpload}. Overenie prenosu je uskutočnené spätným odoslaním celého programu z mikropočítača do IDE. Bootloader je spustený len určitý (krátky) čas po resetovaní procesora, ak v tomto časovom okne nie je zaznamenané nahrávanie riadiaceho programu, spustí sa posledný nahraný program. Procesor je resetovaný po obnove napájania ale i pri nadviazaní nového sériového spojenia.
@@ -101,13 +102,11 @@ Proces kompilácie a nahratia riadiaceho programu je možné implementovať na n
 Implementovaným riešením je použitie CLI samotného Arduino IDE, ktoré poskytuje všetky nami požadované funkcionality \cite{arduinoIdeCli}. Vyskladaním riadiaceho programu v grafickom jazyku je vytvorený súbor, vstup pre Arduino IDE, ktoré je v Java spustené ako samostatný proces na pozadí. Prostredníctvom CLI je do Arduino IDE odovzdaný vyskladaný riadiaci program a parametre sériového portu, cez ktorý prebehne nahranie. Požadovaný sériový port zvolí používateľ v GUI našej aplikácie pomocou knižnice jSerialComm. Textový výstup procesu bežiaceho na pozadí je presmerovaný do grafického prvku aplikácie, kde je možné sledovať výsledky či prípadné chyby. Arduino IDE je tiež možné použiť bez pripojenia sériového portu na overenie vytvoreného programu.
 
 
-% Riadiaci program robota
+%%%%%
+% %%%    Riadiaci program robota
+%%%%%
 \section{Riadiaci program robota}
 todo
-
-\subsection{Robot Otto}
-todo
-
 
 
 
