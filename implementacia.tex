@@ -6,56 +6,106 @@ V kapitole opisujeme priebeh vzniku aplikácie, implementačné detaily, postupy
 
 Vývoj začíname návrhom systému, ktorý umožní v aplikácii spístupniť rôzne programovacie verzie pre rôzne modely robota a rôzne typy riadiaceho programu. Pokračujeme návrhom kostry a vizuálnej podoby aplikácie, v ktorej neskôr vzniknú jednotlivé moduly. V prvej fáze implementujeme časti podporujúce komunikáciu s aktuálnou verziou riadiaceho programu robota Otto a jeho programovanie. Nasleduje etapa rozširovania funkcionalít (hlavne grafického jazyka)  a práca na module simulácie.
 
-K orientácii v štruktúre aplikácie môže byť nápomocný obrázok \ref{obr:app-structure}, kde sú v stĺpcoch znázornené jednotlivé moduly. Zobrazené sú tiež ich závislosti na technológiách a zdrojových súboroch.
+%K orientácii v štruktúre aplikácie môže byť nápomocný obrázok \ref{obr:app-structure}, kde sú v stĺpcoch znázornené jednotlivé moduly. Zobrazené sú tiež ich závislosti na technológiách a zdrojových súboroch.
 
-\begin{figure}
-\centerline{\includegraphics[width=1\textwidth]{images/app-structure}}
-\caption[Štruktúra aplikácie]{Štruktúra aplikácie}
-\label{obr:app-structure}
-\end{figure}
+%\begin{figure}
+%\centerline{\includegraphics[width=1\textwidth]{images/app-structure}}
+%\caption[Štruktúra aplikácie]{Štruktúra aplikácie}
+%\label{obr:app-structure}
+%\end{figure}
 
 
 %%%%%
-% %%% Modulárny systém
+% %%% Modulárny systém verzií
 %%%%%
 \section{Systém verzií}
-Aplikáciu budujeme na systéme verzií. Verziou označujeme súbor údajov určujúcich konfiguráciu aplikácie, podľa ktorej sa správajú (sú dostupné) jednotlivé moduly. Verziu definuje nasledovné:
+Systém umožňuje definovať správanie jednotlivých modulov aplikácie (editor kódu, modul sériovej komunikácie, modul pre kompiláciu a nahranie riadiaceho programu, modul simulácie) pomocou konfiguračných súborov. Interakcia s aplikáciou začína vyhľadaním, výberom a načítaním takéhoto súboru --- verzie, ktorá určuje pre jednotlivé moduly ich počiatočnú konfiguráciu (nastavenie po načítaní konfiguračného súboru verzie, pred interakciou užívateľa s aplikáciou) a ich správanie počas interakcie s užívateľom (kým nie je načítaná iná verzia alebo ukončená aplikácia). Úlohou verzií je zabezpečiť nenáročnú rozšíriteľnosť a konfigurovateľnosť aplikácie parametrizáciou modulov. Počas tvorby aplikácie vznikli dve verzie, \uv{Otto 2020 Robotická liga} a \uv{Otto 2021 Procedural}.
 
-\begin{itemize}[noitemsep]
-\item názov - označenie pre používateľa
-\item pre modul editor kódu (Blockly)
-\begin{itemize}[topsep=0pt,itemsep=0pt,partopsep=0pt, parsep=0pt]
-\item definícia obsahu ponuky zobrazených blokov (obr.\ref{obr:gui-layout}, priestor A)
-\item definícia iniciálneho obsahu pracovnej plochy (obr.\ref{obr:gui-layout}, priestor B)
-\item označenie generátora kódu (prekladača grafického jazyka)
-\end{itemize}
-\item pre modul kompilácie a modul sériovej komunikácie
-\begin{itemize}[topsep=0pt,itemsep=0pt,partopsep=0pt, parsep=0pt]
-\item určenie, či generovaný kód má byť kompilovaný alebo priamo prenášaný sériovou komunikáciou
-\end{itemize}
-\item pre modul simulácie
-\begin{itemize}[topsep=0pt,itemsep=0pt,partopsep=0pt, parsep=0pt]
-\item označenie parsera pre vytvorenie inštrukcií pre simuláciu z generovaného kódu
-\end{itemize}
-\item zoznam logických modulov, pre každý modul:
-\begin{itemize}[topsep=0pt,itemsep=0pt,partopsep=0pt, parsep=0pt]
-\item názov a opis
-\item určenie, či je logický modul povinným
-\item určenie súboru s podpornými funkciami modulu
-\item veľkosť
-\item súvisiace kategórie v ponuke zobrazených blokov modulu editor kódu
-\end{itemize}
-\item zoznam ukážkových programov, pre každú ukážku:
-\begin{itemize}[topsep=0pt,itemsep=0pt,partopsep=0pt, parsep=0pt]
-\item názov a opis
-\item zoznam použitých logických modulov
-\item definíciu (iniciálneho) obsahu pracovnej plochy (obr.\ref{obr:gui-layout}, priestor B)
-\end{itemize}
-\end{itemize}
+\subsection{Obsah konfiguračného súboru verzie}
+Súbor reprezentujúci verziu je tvorený množinou dvojíc kľúč--hodnota. Ich konkrétny význam a použitie je bližšie vysvetlené v častiach venovaých jednotlivým modulom.
 
-Interakcia s aplikáciou začína výberom verzie. V závislosti na jej charaktere môže byť vyžadované skompilovať a nahrať do mikropočítača riadiaci program. Ide napríklad o verziu podporujúcu programovanie robota Otto spôsobom \uv{program reprezentovaný číslami v pamäti RAM} (kapitola \ref{subsub:otto-programovanie}), kde všetka ďalšia interakcia a programovanie prebieha bez nutnosti kompilácie. V inom prípade môže byť používateľovi po voľbe verzie umožnený výber \textit{logických modulov}. Jedná sa o (tematické) celky funkcionalít, príkladom je logický modul \textit{senzory}, ktorý používateľovi sprístupní v grafickom jazyku bloky umožňujúce čítať aktuálne merané hodnoty alebo čakať na nameranie konkrétnej hodnoty. Logické moduly sú tiež previazané s podpornými funkciami, ktoré je nutné kompilovať ako súčasť riadiaceho programu. Logickým modulom je možné v systéme verzií definovať veľkosť a obmedziť tak výber kombinácie prekračujúcej pamäťový limit mikropočítača. Logické moduly tiež umožňujú zjednodušiť programovanie začiatočníkom obmedzením množstva dostupných funkcií. K verziám môžu byť pripojené príklady programov v nich zostrojiteľných.
+\begin{table}\footnotesize
+\centering
+\begin{tabular}{ |p{3.8cm}|p{10cm}|  }
+ \hline
+	\multicolumn{2}{|c|}{\textbf{Všeobecné informácie o verzii}} \\
+ \hline
+	\textit{kľúč} & \textit{hodnota}\\
+ \hline
+	name&identifikátor verzie pre používateľa\\
+	robotMaxMemory&limit pre súčet veľkostí vybraných logických modulov\\
+	moduleCount&počet logických modulov\\
+	exampleCount&počet ukážkových programov\\
+ \hline
 
-Počas vývoja aplikácie vznikli dve verzie pre programovanie robota Otto. Verzia umožňujúca tvorbu choreografií reprezentovaných zoznamom trojíc (spôsob vyvinutý pre účely denných táborov, kapitola \ref{subsub:otto-programovanie}) a verzia pre procedurálne programovanie, sprístupňujúca používateľovi interakciu so senzormi a možnosť definície vlastnej logiky programu takmer od základu.
+ \multicolumn{2}{c}{} \\
+ \multicolumn{2}{c}{\textbf{Informácie pre modul editor kódu GPJ}} \\
+ \hline
+	\textit{kľúč} & \textit{hodnota}\\
+ \hline
+ 	toolbox&XML definícia obsahu ponuky prvkov GPJ\\
+	&(obr.\ref{obr:gui-layout}, priestor A)\\
+ 	workspace&XML definícia iniciálneho obsahu pracovnej plochy editora GPJ (obr.\ref{obr:gui-layout}, priestor B)\\
+ 	categories&zoznam názvov kategórií v ponuke prvkov GPJ\\
+ 	generator&označenie generátora kódu (\uv{prekladača} GPJ)\\
+ \hline
+
+ \multicolumn{2}{c}{} \\
+ \multicolumn{2}{c}{\textbf{Informácie pre modul kompilácie a modul sériovej komunikácie}} \\
+ \hline
+	\textit{kľúč} & \textit{hodnota}\\
+ \hline
+	programInRam&určenie, či generovaný kód má byť kompilovaný alebo priamo prenášaný sériovou komunikáciou\\
+ \hline
+
+ \multicolumn{2}{c}{} \\
+ \multicolumn{2}{c}{\textbf{Informácie pre modul načítania @ choreografie}} \\
+ \hline
+	\textit{kľúč} & \textit{hodnota}\\
+ \hline
+	codeLoader&označenie parsera pre vytvorenie prvkov GPJ\\
+ \hline
+
+ \multicolumn{2}{c}{} \\
+ \multicolumn{2}{c}{\textbf{Zoznam logických modulov, pre modul X (kde X je celé číslo)}} \\
+ \hline
+	\textit{kľúč} & \textit{hodnota}\\
+ \hline
+	moduleX.name&názov, identifikátor pre používateľa\\
+	moduleX.description&opis, identifikátor pre používateľa\\
+	moduleX.required&určenie, či je logický modul povinným\\
+	&(ak áno, vždy sa kompiluje)\\
+	moduleX.size&veľkosť kompilovaných súborov modulu\\
+	moduleX.categories&zoznam názvov súvisiacich kategórií v ponuke prvkov GPJ modulu editor kódu\\
+	moduleX.header&(voliteľné) označenie kompilovaného súboru, časť \textit{header}\\
+	moduleX.setup&(voliteľné) označenie kompilovaného súboru, časť \textit{setup}\\
+	moduleX.footer&(voliteľné) označenie kompilovaného súboru, časť \textit{footer}\\
+ \hline
+
+ \multicolumn{2}{c}{} \\
+ \multicolumn{2}{c}{\textbf{Zoznam ukážkových programov, pre ukážku X (kde X je celé číslo)}} \\
+ \hline
+	\textit{kľúč} & \textit{hodnota}\\
+ \hline
+	exampleX.name&názov, identifikátor pre používateľa\\
+	exampleX.description&opis, identifikátor pre používateľa\\
+	exampleX.modules&zoznam poradových čísel použitých logických modulov\\
+	exampleX.workspace&XML definícia (iniciálneho) obsahu pracovnej plochy editora GPJ (obr.\ref{obr:gui-layout}, priestor B)\\
+ \hline
+\end{tabular}
+\end{table}\normalsize
+
+\subsection{Verzia Otto 2020 Robotická liga}
+Verzia predstavuje konfiguráciu aplikácie, v ktorej je možné tvoriť kód pre robota Otto ako trojice celých čísel (spôsob vyvinutý pre účely denných táborov, kapitola \ref{subsub:otto-programovanie}). Tento prístup vyžaduje, aby bol v Arduino nahraný \uv{statický} riadiaci program, ktorý následne interpretuje znaky prijaté cez sériovú komunikáciu. Vo verzii je teda definované, že pre jej použitie je nutné do robota nahrať takýto program a používateľ je po jej voľbe vyzvaný, aby tak učinil. Modul kompilácie je následne (na základe informácie vo verzii) znefunkčnený, nakoľko ďalšie programovanie robota prebieha priamym odosielaním znakov cez sériovú linku (kapitola \ref{subsub:otto-programovanie}).
+
+Pre modul editora grafického jazyka je vo verzii uvedené, ktoré prvky GPJ majú byť k dispozícii. Napríklad vo verzii \textit{Otto 2020 Robotická liga} sú k dispozícii len prvky prezentovateľné trojicami celých čísel, ktorými je tvorená choreografia a prvky na obsluhu senzorov sú skryté, nakoľko tie riadiaci program nepodporuje. Pre modul editora je vo verzii tiež definovaná iniciálna konfigurácia, počiatočné rozmiestnenie prvkov GPJ v editore, ktoré používateľ následne upravuje a určenie generátora (kapitola \ref{sec:editor-kodu}), ktorý sa použije pri preklade GPJ. Generátor pre verziu \textit{Otto 2020 Robotická liga} prekladá prvky GPJ na trojice celých čísel.
+
+Súčasťou je tiež informácia určujúca, či je možné vygenerovať obsah editora GPJ z užívateľom vloženého kódu vo formáte trojíc celých čísel, reprezentujúcich choreografiu robota Otto. Priložené môžu byť i definície ukážkových programov (definujú prednastavené rozloženie prvkov v GPJ, ktoré možno načítať a ďalej upravovať v editore).
+
+\subsection{Verzia Otto 2021 Procedural}
+Verzia \uv{Otto 2021 Procedural} predstavuje konfiguráciu aplikácie, v ktorej je možné tvoriť kód pre robota Otto prvkami GPJ reprezentujúcimi prvky jazyka Arduino (C++). Po načítaní tejto verzie je užívateľovi umožnená voľba \textit{logických modulov}, ktoré sú vo verzii definované. Jedná sa o (tematické) celky funkcionalít, určujú, ktoré prvky budú v editore GPJ k dispozícii a ktoré časti riadiaceho programu budú kompilované. Príkladom je logický modul \textit{senzory}, ktorý po výbere používateľovi sprístupní v GPJ bloky umožňujúce čítať aktuálne merané hodnoty alebo čakať na nameranie konkrétnej hodnoty. K logickému modulu môžu prislúchať súbory definujúce podporne funkcie (v jazyku C++), ktorých volania sú súčasťou prekladu prvkov GPJ sprístupnených daným logickým modulom. Na základe voľby logických modulov je vytvorený zoznam takýchto súborov, ktoré pri kompilácií spracuje modul aplikácie na to určený (kapitola \ref{sub:arduinoIDE}). Logickým modulom je možné v systéme verzií definovať veľkosť a obmedziť tak výber kombinácie prekračujúcej pamäťový limit mikropočítača. Logické moduly tiež umožňujú zjednodušiť programovanie začiatočníkom obmedzením množstva dostupných funkcií.
+
+Pre túto verziu sú tiež definované informácie pre ostatné moduly aplikácie, napríklad, že nemá byť dostupná možnosť odoslať prekladaný program cez sériový port, ale je nutná jeho kompilácia. Súčasťou definícií ukážkových programov sú zoznamy logických modulov vyžadovaných prvkami GPJ použitými v danej ukážke.
 
 
 %%%%%
@@ -66,7 +116,7 @@ GUI aplikácie tvoríme pomocou JavaFX. Cieľom je vytvoriť prehľadné prostre
 
 Ďalšie prvky vyžadujúce v aplikácii väčšiu plochu sú najmä výstupné, predovšetkým ide o výstup pre modul simulácie a výstup \uv{prekladača} grafického jazyka na kód následne kompilovaný a odosielaný do riadiacej jednotky robota. Taktiež je nutné zakomponovať do GUI modul pre komunikáciu s robotom, konzolu sériovej komunikácie.
 
-Výsledné rozloženie môžete vidieť na obrázku \ref{obr:gui-layout}. Tvoriť kód v grafickom jazyku možno v časti \textit{A}, umožňujúcej výber blokov, a ich následným umiestňovaním v priestore \textit{B}. Sektor \textit{C} je vyhradený pre výstup modulu simulácie. Časť \textit{D} je zdieľaná modulom sériovej komunikácie a modulom umožňujúcim náhľad do kódu generovaného prekladom grafického jazyka, medzi ktorými možno prepínať. Nad spomínanými oblasťami sa nachádza lišta nástrojov, sprístupňujúcich funkcie ako vyhľadanie a pripojenie sériovj komunikácie či voľbu verzie programovaného riadiaceho programu robota.
+Výsledné rozloženie môžete vidieť na obrázku \ref{obr:gui-layout}. Tvoriť kód v grafickom jazyku možno v časti \textit{A}, umožňujúcej výber blokov, a ich následným umiestňovaním v priestore \textit{B}. Sektor \textit{C} je vyhradený pre výstup modulu simulácie. Časť \textit{D} je zdieľaná modulom sériovej komunikácie a modulom umožňujúcim náhľad do kódu generovaného prekladom grafického jazyka, medzi ktorými možno prepínať. Nad spomínanými oblasťami sa nachádza lišta nástrojov, sprístupňujúcich funkcie ako vyhľadanie a pripojenie sériovej komunikácie či voľbu verzie programovaného riadiaceho programu robota.
 
 Prípadná zmena usporiadania komponentov nie je v JavaXF zdĺhavou záležitosťou a na základe spätnej väzby od budúcich používateľov možno v rozložení dodatočne vykonať úpravy.
 
@@ -81,6 +131,7 @@ Prípadná zmena usporiadania komponentov nie je v JavaXF zdĺhavou záležitos�
 % %%% Editor kódu
 %%%%%
 \section{Editor kódu}
+\label{sec:editor-kodu}
 Modul umožňujúci tvorbu (riadiaceho) programu pomocou grafického programovacieho jazyka (GPJ) je v podstate samostatnou webovou JavaScript aplikáciou. V GUI našej aplikácie je zobrazený jej výstup tvorený knižnicou Blockly v komponente WebView (webový prehliadač). Interakcia medzi \uv{vonkajšou} Java aplikáciou a vnorenou \uv{Blockly JavaScript aplikáciou} prebieha pomocou inštancie WebEngine, volaním funkcií navonok poskytnutých knižnicou (umožňujú generovanie kódu práve vytvoreného v GPJ, načítanie obsahu pracovnej plochy, obsahu ponuky blokov a podobne).
 
 %Funkčnosť knižnice je založená na definícii blokov a im prislúchajúcich generátorov. Bloky sú navonok vizuálnym komponentom editora, ich spájaním tvorí používateľ kód. Súčasťou ich definície sú validátory, vykonávajúce kontroly (najmä typové). Validátory určujú obmedzenia použitia blokov, ľubovoľné dva bloky nemusí byť možné spojiť, čím možno vynútiť syntaktické pravidlá cieľového textového programovacieho jazyka. Každému bloku je tiež priradený generátor, ktorý zodpovedá za interpretáciu bloku pri generovaní výsledného kódu (u nás napríklad v jazyku C). Knižnica Blockly poskytuje základné, všeobecné bloky. K dispozícii sú bloky pre \textit{podmienku if}, \textit{cykly}, bloky pre \textit{logické a číselné konštanty} a manipuláciu s nimi (porovnávanie, sčítavanie, negácia a iné), bloky pre \textit{manipuláciu s textom}, \textit{tovrbu zoznamov}, \textit{reprezentáciu a miešanie farieb}, \textit{tvorbu premenných} a \textit{definíciu procedúr a funkcií}. Súčasťou sú generátory pre jazyky JavaScript, Python, Dart, Lua a PHP.
@@ -114,7 +165,7 @@ Možnosť komunikácie s robotom je jednou zo základných požiadaviek na našu
 \subsubsection{Komunikácia zo strany aplikácie}
 V aplikácii je cieľom vytvoriť integrovaný terminál pre sériovú komunikáciu. Mikropočítač Arduino komunikuje po pripojení rozhraním USB a nainštalovaní príslušného ovládača v počítači s OS, ktorý nám toto spojenie sprostredkuje. Podobne pracuje i terminál v Arduino IDE (oficiálne IDE pre vývoj riadiacich programov Arduino) alebo program Putty (klient pre ssh, Telnet, Rlogin a sériovú komunikáciu \cite{putty}). Autori mikropočítača odporúčajú pre implementáciu sériovej komunikácie v Java použitie knižníc \cite{arduinoAndJava}. V článku o prepojení Java --- Arduino sú spomínané dve, údajne nespoľahlivá knižnica RXTX a možná alternatíva, knižnica jSerialComm, ktorú použijeme. 
 
-jSerialComm je platformovo nezávislá knižnica, ľahko integrovateľná do našej aplikácie \cite{jSerialComm}. Umožňuje vyhľadávať pripojené dostupné sérové porty, ako aj obojsmernú komunikáciu po pripojení. Podporuje niekoľko typov operácie, v závislosti na blokovaní čítania z (zápisu do) sériového portu. V prípade čítania sú na výber alternatívy ako \textit{neblokovaná komunikácia}, v ktorej možno príkazom \textit{read()} skúsiť načítať dáta, ak však nie sú k dispozícii (neboli prijaté), vrátený je prázdny reťazec. Inou možnosťou je vynútenie čakania na možný príchod správy a to buď len po nejaký čas alebo až do jej prijatia. Vo všetkých týchto prípadoch by ale v našej aplikácii bolo nutné cyklicky kontrolovať, či nejaké dáta nie sú k dispozícii (ako v mikropočítači), knižnica ale poskytuje vhodnejší prístup, registráciu callback funkcie. Tú knižnica zavolá po každom výskyte špecifikovanej udalosti, ktorom môže byť dostupnosť dát alebo prijatie ucelenej správy. V implementácii volíme možnosť volania callback funkcie po prijatí ucelenej správy, pričom za koniec správy je považovaný znak konca riadku (\textbackslash n --- line feed). Registrovaná callback funkcia správu načíta a zobrazí v termináli používateľovi.
+jSerialComm je platformovo nezávislá knižnica, ľahko integrovateľná do našej aplikácie \cite{jSerialComm}. Umožňuje vyhľadávať pripojené dostupné sériové porty, ako aj obojsmernú komunikáciu po pripojení. Podporuje niekoľko typov operácie, v závislosti na blokovaní čítania z (zápisu do) sériového portu. V prípade čítania sú na výber alternatívy ako \textit{neblokovaná komunikácia}, v ktorej možno príkazom \textit{read()} skúsiť načítať dáta, ak však nie sú k dispozícii (neboli prijaté), vrátený je prázdny reťazec. Inou možnosťou je vynútenie čakania na možný príchod správy a to buď len po nejaký čas alebo až do jej prijatia. Vo všetkých týchto prípadoch by ale v našej aplikácii bolo nutné cyklicky kontrolovať, či nejaké dáta nie sú k dispozícii (ako v mikropočítači), knižnica ale poskytuje vhodnejší prístup, registráciu callback funkcie. Tú knižnica zavolá po každom výskyte špecifikovanej udalosti, ktorom môže byť dostupnosť dát alebo prijatie ucelenej správy. V implementácii volíme možnosť volania callback funkcie po prijatí ucelenej správy, pričom za koniec správy je považovaný znak konca riadku (\textbackslash n --- line feed). Registrovaná callback funkcia správu načíta a zobrazí v termináli používateľovi.
 
 Odosielanie správ je rovnako možné nastaviť do blokujúceho režimu, kde pri pokuse o zápis do sériového portu knižnica čaká buď to určitý čas alebo kým sa podarí odoslať požadovaný počet bajtov. Pre implementáciu volíme neblokovaný prístup, ak používateľ odošle dáta, sú zapísané hneď ako je to možné. Neblokovaný prístup umožní odoslanie viacerých správ, ktoré následne v rovnakom poradí knižnica odvysiela.
 
@@ -165,8 +216,8 @@ Aby bolo možné simulovať fyzikálne zákony, definujeme podlahe a jednotlivý
 %%%%%
 % %%%    Riadiaci program robota
 %%%%%
-\section{Riadiaci program robota}
-todo
+%\section{Riadiaci program robota}
+%todo
 
 
 
