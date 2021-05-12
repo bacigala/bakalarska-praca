@@ -9,7 +9,7 @@
 \usepackage[slovak]{babel} % vypnite pre prace v anglictine
 \linespread{1.25} % hodnota 1.25 by mala zodpovedat 1.5 riadkovaniu
 \usepackage{listings}
-\renewcommand{\lstlistingname}{Ukážka kódu}% Listing -> Algorithm
+\renewcommand{\lstlistingname}{Ukážka kódu}% Listing -> Ukazka kodu
 \usepackage{enumitem}
 \usepackage{array}
 
@@ -174,9 +174,7 @@ Fakulta matematiky, fyziky a informatiky
 ~
 
 \vfill
-{\bf Poďakovanie:} TODO: Tu môžete poďakovať školiteľovi, prípadne
-ďalším osobám, ktoré vám s prácou nejako pomohli, poradili,
-poskytli dáta a podobne.
+{\bf Poďakovanie:} Ďakujem pánovi školiteľovi Mgr. Pavlovi Petrovičovi, PhD. za cenné rady, podporu, konzultácie i motivačnú kritiku počas tvorby aplikácie a textu.
 
 % --- Koniec poďakovania
 
@@ -185,16 +183,9 @@ poskytli dáta a podobne.
 % -------------------
 \newpage 
 \section*{Abstrakt}
+V práci sa zaoberáme vývojom desktopovej aplikácie s grafickým používateľským rozhraním, modulárnym systémom, ktorý umožňuje programovať jednoduché edukačné roboty riadené mikropočítačom Arduino. Vzniká aplikácia primárne určená pre začínajúcich, mladistvých programátorov vo veku 10 až 15 rokov. Riadiaci program robota je možné tvoriť prostredníctvom navrhnutého vizuálneho programovacieho jazyka, ktorý je následne transformovaný do reprezentácie v jazyku C (používateľ jazyk C ovládať nemusí). Prepojenie s kompilátorom Arduino IDE umožňuje jednoduché nahranie vytvoreného programu priamo do mikropočítača. So spusteným riadiacim programom je následne, po pripojení rozhrania USB, možné v termináli obojsmerne sériovo komunikovať. Súčasťou aplikácie je modul pre simuláciu, v ktorom možno zobraziť sériu pohybov jednoduchých choreografií vytvorených pre robota Otto.
 
-
-TODO: Slovenský abstrakt v rozsahu 100-500 slov, jeden odstavec. Abstrakt
-stručne sumarizuje výsledky práce. Mal by byť pochopiteľný pre bežného
-informatika. Nemal by teda využívať skratky, termíny alebo označenie
-zavedené v práci, okrem tých, ktoré sú všeobecne známe.
-
-V práci opisujeme vznik modulárneho systému pre tvorbu riaidiacich programov robota riadeného mikropočítačom Arduino. Softvér vzznikol s cieľom poskytnúť mladistvým, zaČínajúcim programátorom vo veku 10-15 rokov nástroj pre rpzvoj ich zručností, najmä v oblasti informatiky, programovania a priestorovej predstavivosti a orientácie. Pre tento úČel bol vyvynutý grafický programovací jazyk, s prvkami umožňujúcimi iradenie jednotlivých funkcií robota.  
-
-\paragraph*{Kľúčové slová:} otto, mokrarosa, výučbový robot
+\paragraph*{Kľúčové slová:} výučbový robot, arduino, otto, vizuálny programovací jazyk
 % --- Koniec Abstrakt - Slovensky
 
 
@@ -204,11 +195,9 @@ V práci opisujeme vznik modulárneho systému pre tvorbu riaidiacich programov 
 \newpage 
 \section*{Abstract}
 
-TODO: Abstract in the English language (translation of the abstract in the
-Slovak language).
+In this thesis we look into development of a desktop application with a graphical user interface, a modular system, which allows programming of simple educational Arduino--controlled robots. The application being created is primarily designed for beginners, youth programmers aged from 10 to 15. Control program for robot can be created in custom designed visual programming language, subsequently translated into its equivalent representation in language C (user does not need to know language C). Linkage with Arduino IDE compiler allows easy upload of created program directly to microcontroller. After upload, application provides terminal for two--way serial communication with created program via USB connection. Enclosed simulation module allows user to test simple choreographies for robot Otto.
 
-
-\paragraph*{Keywords:} otto, mokrarosa, educational robot
+\paragraph*{Keywords:} educational robot, arduino, otto, visual programming language
 
 % --- Koniec Abstrakt - Anglicky
 

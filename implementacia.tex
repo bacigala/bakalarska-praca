@@ -1,4 +1,6 @@
 
+\addtocontents{toc}{\protect\newpage}
+
 \chapter{Návrh a implementácia}
 \label{kap:implementacia}
 
@@ -22,7 +24,7 @@ Vývoj začíname návrhom systému, ktorý umožní v aplikácii sprístupniť 
 \label{sec:system-verzii}
 Systém umožňuje definovať správanie jednotlivých modulov aplikácie (editor kódu, modul sériovej komunikácie, modul pre kompiláciu a nahranie riadiaceho programu, modul simulácie) pomocou konfiguračných súborov. Interakcia s aplikáciou začína vyhľadaním, výberom a načítaním takéhoto súboru --- verzie, ktorá určuje pre jednotlivé moduly ich počiatočnú konfiguráciu (nastavenie po načítaní konfiguračného súboru verzie, pred interakciou užívateľa s aplikáciou) a ich správanie počas interakcie s užívateľom (kým nie je načítaná iná verzia alebo ukončená aplikácia). Úlohou verzií je zabezpečiť nenáročnú rozšíriteľnosť a konfigurovateľnosť aplikácie parametrizáciou modulov. Počas tvorby aplikácie vznikli dve verzie, \uv{Otto 2020 Robotická liga} a \uv{Otto 2021 Procedural}.
 
-\subsection{Obsah konfiguračného súboru verzie}
+\subsection{Konfiguračný súbor}
 \label{sub:konfig-subor-verzie}
 Súbor reprezentujúci verziu je tvorený množinou dvojíc kľúč--hodnota. Zoznam použitých kľúčov a význam priradenej hodnoty definuje nasledovná tabuľka.
 
