@@ -117,11 +117,13 @@ Súčasťou definície verzie je tiež informácia, či je možné vygenerovať 
 K verzii môžu byť tiež priložené definície ukážkových programov. Definujú prednastavené rozloženie prvkov v editore GPJ, ktoré možno načítať a ďalej upravovať. Nevyhnutné je pre každý ukážkový program definovať zoznam použitých modulov, aby bolo možné nastaviť kompilátor a kategórie prvkov GPJ zobrazené v editore.
 
 \subsection{Verzia Otto 2020 Robotická liga}
+\label{sub:verzia-otto-2020-rl}
 Verzia predstavuje konfiguráciu aplikácie, v ktorej je možné tvoriť kód pre robota Otto ako trojice celých čísel (spôsob vyvinutý pre účely denných táborov, kapitola \ref{subsub:otto-programovanie}). Tento prístup vyžaduje, aby bol v Arduino nahraný \uv{statický} riadiaci program, ktorý následne interpretuje znaky prijaté cez sériovú komunikáciu. Vo verzii je teda definované, že pre jej použitie je nutné do robota nahrať takýto program a používateľ je po jej voľbe vyzvaný, aby tak učinil. Modul kompilácie je následne (na základe informácie vo verzii) znefunkčnený, nakoľko ďalšie programovanie robota prebieha priamym odosielaním znakov cez sériovú linku (kapitola \ref{subsub:otto-programovanie}).
 
 Vo verzii \textit{Otto 2020 Robotická liga} sú v editore GPJ k dispozícii len prvky prezentovateľné trojicami celých čísel, ktorými je tvorená choreografia a prvky na obsluhu senzorov sú skryté, nakoľko tie riadiaci program nepodporuje. Generátor pre verziu \textit{Otto 2020 Robotická liga} prekladá prvky GPJ na trojice celých čísel.
 
 \subsection{Verzia Otto 2021 Procedural}
+\label{sub:verzia-otto-2021-procedural}
 Verzia \uv{Otto 2021 Procedural} predstavuje konfiguráciu aplikácie, v ktorej je možné tvoriť kód pre robota Otto prvkami GPJ reprezentujúcimi prvky jazyka Arduino (C++). Po načítaní tejto verzie je užívateľovi umožnená voľba \textit{logických modulov}, ktoré sú vo verzii definované. Príkladom je logický modul \textit{senzory}, ktorý po výbere používateľovi sprístupní v GPJ bloky umožňujúce čítať aktuálne merané hodnoty alebo čakať na nameranie konkrétnej hodnoty. Možnosť odoslať kód vytvorený prekladom GPJ prostredníctvom sériovej komunikacie je znefunkčnená, namiesto toho je k dispozícii možnosť  kód kompilovať a vzniknutý riadiaci program odoslať do riadiacej jednotky robota použitím modulu kompilácie (kapitola \ref{sub:arduinoIDE}).
 
 \newpage
@@ -152,10 +154,13 @@ Modul umožňujúci tvorbu (riadiaceho) programu pomocou grafického programovac
 
 Konfiguráciu modulu editora kódu zabezpečuje systém verzií (kapitola \ref{sec:system-verzii}), ktorý využíva rozhranie poskytnuté knižnicou Blocky pre úpravu momentálne zobrazeného obsahu pracovnej plochy a ponuky prvkov GPJ. Obsah a rozloženie oboch týchto častí možno určiť načítaním ich definície vo formáte XML (súčasť verzií,  kapitola \ref{sub:konfig-subor-verzie}).
 
-Rozhranie definuje i funkcie, ktorými je možné volať generátory GPJ. Ich úlohou je preklad prvkov GPJ na kód riadiaceho programu (prípadne jeho časti), ktorý je následne spracovávaný Java aplikáciou a kompilátorom. Možno tiež získať XML reprezentáciu aktuálneho obsahu pracovnej plochy, a naopak, obnoviť obsah pracovnej plochy z poskytnutej XML reprezentácie. Tento mechanizmus využívame pre načítanie iniciálneho stavu pracovnej plochy (po voľbe a načítaní verzie) ale i načítanie ukážkových programov. Samozrejmosťou je implementácia funkcie umožňujúcej uloženie a znovu načítanie celého projektu.
+Rozhranie definuje i funkcie, ktorými je možné volať generátory GPJ. Ich úlohou je preklad prvkov GPJ na kód riadiaceho programu (prípadne jeho časti), ktorý je následne spracovávaný Java aplikáciou a kompilátorom. Usporiadaním v editore kódu sú použité bloky GPJ organizované v grafovej štruktúre, generátor je funkcia, ktorej parametrom je blok, na ktorom je volaná. Má prístup k poliam bloku (polia sú prvky pre výber možností, prípadne textový alebo číselný vstup. Zároveň má generátor prístup k vnoreným blokom (napríklad blok cyklu while má prístup k blokom v tele cyklu) a pripojeným \uv{nasledovníkom} --- bloku pod ním. Návratovou hodnotou je vhodne spracovaný kód so zakomponovaným obsahom potomkov a polí. Kód je generovaný rekurzívne, zvyčajne začínajúc na najvyššom bloku umiestnenom v editore.
+
+Rozhranie tiež umožnuje získať aktuálny obsah pracovnej plochy zapísaný v XML reprezentácii a naopak, obnoviť obsah pracovnej plochy z poskytnutej XML reprezentácie. Tento mechanizmus využívame pre načítanie iniciálneho stavu pracovnej plochy (po voľbe a načítaní verzie) ale i načítanie ukážkových programov. Samozrejmosťou je implementácia funkcie umožňujúcej uloženie a znovu načítanie celého projektu.
 
 Detailom implementácie prvkov a logiky vzniknutého grafického programovacieho jazyka je venovaná kapitola \ref{kap:navrh-gpj}.
 
+\newpage
 
 %%%%%
 % %%%    Komunikácia, serial
@@ -163,7 +168,7 @@ Detailom implementácie prvkov a logiky vzniknutého grafického programovacieho
 \section{Komunikácia s robotom}
 Možnosť komunikácie s robotom je jednou zo základných požiadaviek na našu aplikáciu. Umožňuje vyššiu interakciu s používateľom a je tiež nápomocná pri ladení programov (pomocné výpisy). Komunikácia s robotom na úrovni nahratia kompilovaného programu je predmetom časti \ref{sub:arduinoIDE}, tu je opísaná sériová komunikácia už bežiaceho programu v mikropočítači Arduino s našou aplikáciou. Jedná sa o komplementárnu časť systému k časti implementovanej v mikropočítači (sekcia \ref{sub:arduino}).
 
-\subsubsection{Komunikácia zo strany aplikácie}
+%\subsubsection{Komunikácia zo strany aplikácie}
 V aplikácii je cieľom vytvoriť integrovaný terminál pre sériovú komunikáciu. Mikropočítač Arduino komunikuje po pripojení rozhraním USB a nainštalovaní príslušného ovládača v počítači s OS, ktorý nám toto spojenie sprostredkuje. Podobne pracuje i terminál v Arduino IDE (oficiálne IDE pre vývoj riadiacich programov Arduino) alebo program Putty (klient pre ssh, Telnet, Rlogin a sériovú komunikáciu \cite{putty}). Autori mikropočítača odporúčajú pre implementáciu sériovej komunikácie v Java použitie knižníc \cite{arduinoAndJava}. V článku o prepojení Java --- Arduino sú spomínané dve, údajne nespoľahlivá knižnica RXTX a možná alternatíva, knižnica jSerialComm, ktorú použijeme. 
 
 jSerialComm je platformovo nezávislá knižnica, ľahko integrovateľná do našej aplikácie \cite{jSerialComm}. Umožňuje vyhľadávať pripojené dostupné sériové porty, ako aj obojsmernú komunikáciu po pripojení. Podporuje niekoľko typov operácie, v závislosti na blokovaní čítania z (zápisu do) sériového portu. V prípade čítania sú na výber alternatívy ako \textit{neblokovaná komunikácia}, v ktorej možno príkazom \textit{read()} skúsiť načítať dáta, ak však nie sú k dispozícii (neboli prijaté), vrátený je prázdny reťazec. Inou možnosťou je vynútenie čakania na možný príchod správy a to buď len po nejaký čas alebo až do jej prijatia. Vo oboch týchto prípadoch by ale v našej aplikácii bolo nutné cyklicky kontrolovať, či nejaké dáta nie sú k dispozícii (ako v mikropočítači), knižnica ale poskytuje vhodnejší prístup, registráciu callback funkcie. Tú knižnica zavolá po každom výskyte špecifikovanej udalosti, ktorou môže byť dostupnosť dát alebo prijatie ucelenej správy. V implementácii volíme možnosť volania callback funkcie po prijatí ucelenej správy, pričom za koniec správy je považovaný znak konca riadku (\textbackslash n --- line feed). Registrovaná callback funkcia správu načíta a zobrazí v termináli používateľovi.
