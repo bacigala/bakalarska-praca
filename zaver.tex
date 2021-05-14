@@ -2,20 +2,20 @@
 \addcontentsline{toc}{chapter}{Záver} % rucne pridanie do obsahu
 \markboth{Záver}{Záver} % vyriesenie hlaviciek
 
+V práci sme sa venovali vývoju desktopovej aplikácie s grafickým používateľským rozhraním, umožňujúcej programovať jednoduchého výučbového robota Otto  v navrhnutom vizuálnom programovacom jazyku. Najprv sme sa oboznámili s možnosťami spomínaného robota a tvorbou programov pre jednočipový mikropočítač Arduino Nano Strong v jazyku Arduino (C++), ktorým je riadený. Následne vznikal systém, desktopová aplikácia s viacerými modulmi.
 
+Funkcie aplikácie boli z počiatku tvorené v náväznosti na existujúci riadiaci program robota, umožňujúci ovládanie prostredníctvom znakového terminálu. Pre tento účel vznikol v aplikácii integrovaný terminál sériovej komunikácie. Používateľovi dovoľuje jednoducho vyhľadať dostupné sériové porty a nadviazať spojenie s mikropočítačom.
 
+Odoslaním niekoľkých riadiacich príkazov bolo možné komunikáciou s existujúcim riadiacim programom vytvoriť v pamäti mikropočítača jednoduchú choreografiu. Jedným z našich primárnych cieľov bolo umožniť tvorbu týchto choreografií v prehľadnom vizuálnom jazyku. Pre naplnenie tejto požiadavky sme sa zoznámi s JavaScript knižnicou Blockly, nástrojom pre ich tvorbu. V navrhnutom jazyku vznikli bloky reprezentujúce jednotlivé časti choreografie, programom následne prekladané na ich zavedenú číselnú reprezentáciu, príkazy odosielané sériovou komunikáciou. Bez zmeny riadiaceho programu sme tak umožnili prehľadnú tvorbu jednoduchých sekvencií pohybov.
 
+V ďalšom bol zavedený alternatívny prístup k tvorbe riadiacich programov. Navrhli sme vizuálny programovací jazyk, ktorého prvky reprezentujú rôzne časti jazyka C, ktorým je mikropočítač programovaný. Všetok kód je pritom tvorený výhradne vo vizuálnom jazyku a znalosť jazyka C nie je pre použitie aplikácie nutná. Prístupné sú komponenty pre vetvenie programu, cykly, základné premenné, procedúry a funkcie. V jazyku tiež možno ovládať špecifické funkcie robota. Boli zavedené bloky pre pohyb motorov, prácu so senzormi ale i bloky umožňujúce prijímať a odosielať správy prostredníctvom sériovej komunikácie pripojením rozhrania USB alebo Bluetooth. Takto vytvorený kód je z reprezentácie vo VPJ najprv interpretovaný v jazyku C, potom kompilovaný prepojením s aplikáciou Arduino IDE a následne odoslaný robotovi.
 
+Pri zavádzaní prvkov VPJ bol kladený dôraz na rôznorodosť ich abstrakcie. V kategórii blokov umožňujúcich interakciu so senzormi tak vznikol blok pre jednoduché načítanie aktuálnej vzdialenosti meranej ultrazvukom no napríklad  i blok pre čakanie na nameranie konkrétnej hodnoty. Odhad miery abstrakcie nebol ľahkou úlohou, dúfame však, že poskytnutý rozsah pokryje požiadavky rôznych vekových kategórií.
 
+V aplikácii bol zavedený modulárny systém verzii  umožňujúci jej jednoduché rozšírenie o ďalšie funkcie, najmä pridanie ďalších prvkov vizuálneho  jazyka. Systém tiež zavádza možnosť logického rozčlenenia funkcií riadiaceho programu. Je tak možné obmedziť dostupné funkcie jazyka, čo môže uľahčiť počiatočné zoznámenie s jeho funkciami a v prípade potreby tiež ušetriť miesto v pamäti mikropočítača. V snahe uľahčiť používateľom fázu prvotného zoznámenia sa s aplikáciou boli tiež vytvorené jednoduché ukážkové programy, na ktoré možno pri práci nadviazať.
 
+Zamýšľaný modul simulácie robota bol vytvorený, no len v obmedzenej miere. Simulovať možno len programy vytvorené pre verziu \textit{Otto 2020 Robotická liga}, konkrétne časti choreografií reprezentujúce pohyb. V tomto smere je možné aplikáciu v budúcnosti značne rozšíriť. Jedným zo zvažovaných riešení pre simuláciu riadiaceho programu prekladaného do jazyka C bolo spustiť vytvorený program ako samostatný proces, s ktorým by bolo následne možné komunikovať prostredníctvom socketov. V ňom použité volania funkcií pre riadenie motorov a senzorov by bolo nutné \uv{presmerovať} do modulu simulácie našej aplikácie.
 
+K záveru sa nám podarilo previesť i jednoduchý experiment. Prácu s aplikáciou si vyskúšala jedna z účastníčok robotického krúžku. Žiačka ôsmeho ročníka základnej školy v aplikácii vytvorila niekoľko jednoduchých programov, potešila ju najmä možnosť intuitívnej tvorby riadiaceho programu, v ktorom sa veľmi rýchlo zorientovala. Vyjadrila tiež nápady pre prácu s aplikáciou do budúcna, zaujala ju najmä možnosť tvorby tancov. Experimentom boli tiež odhalené niektoré nedostatky, najmä v počiatočnej inštalácií, ktorá nie je pre začiatočníka triviálnou záležitosťou (mnoho komponentov našej aplikácie vyžaduje osobitnú pozornosť, je nutné nainštalovať Java JRE, súbory JavaFX, Arduino IDE a navyše ovládač sériového portu).
 
-
-
-
-
-
- v stručnosti zhrnúť dosiahnuté výsledky vo vzťahu k stanoveným cieľom
-minimálne dve strany
-sa zvyknú rozoberať aj otvorené problémy a námety na ďalšiu prácu v oblasti.
-záver sumarizuje najdôležitejšie veci po tom, ako prácu prečítal
+Veríme, že naša aplikácia uľahčí prácu začínajúcim programátorom, poskytne im priestor pre rozvoj fantázie a zručností a vzbudí v nich záujem ďalej objavovať možnosti a zákony všetkých zapojených oblastí.

@@ -1,0 +1,84 @@
+
+\chapter{Ukážky programov}
+\label{kap:ukazky-programov}
+
+V kapitole uvádzame niekoľko ukážok programov vytvorených v našej aplikácií. Tieto programy sú v nej k dispozícií pre začiatočníkov, ktorým môžu poskytnúť o niečo pohodlnejšiu štartovaciu pozíciu v procese zoznamovania sa s robotom a softvérom.
+
+\subsubsection{Ultrazvukový senzor, čakanie}
+Pre rýchle zoznámenie sa s možnosťami ultrazvukového senzora a významom súvisiaceho bloku pre \textit{čakanie} môže poslúžiť kód na obrázkoch \ref{obr:example-wave-on-proximity}, \ref{obr:example-wave-on-proximity-2}, \ref{obr:example-wave-on-proximity-3} a \ref{obr:example-wave-on-proximity-4}. Používateľ tak odhalí význam bloku \textit{čakania} a princíp nekonečného vyhodnocovania časti \textit{loop} riadiaceho programu. Program na obrázku \ref{obr:example-wave-on-proximity} predstavuje triviálnu implementáciu, robot máva rukou vždy, keď sa k nemu priblížime na menej ako pol metra. Ukážky \ref{obr:example-wave-on-proximity-2} a \ref{obr:example-wave-on-proximity-3} predstavujú zdanlivo identické programy, no aspekt \textit{čakania} z nich sémanticky robí celkom odlišné algoritmy. Ukážka na obrázku \ref{obr:example-wave-on-proximity-4} predstavuje alternatívny zápis programu v ukážke \ref{obr:example-wave-on-proximity-2}, používateľovi má priblížiť logický význam blokov pre \textit{čakanie}, \uv{čakanie je cyklické vykonávanie ničoho}.
+
+\vspace{1cm}
+
+\begin{figure}[h]
+\centerline{\includegraphics[width=0.6\textwidth]{images/example-wave-on-proximity}}
+\caption[Ukážka programu --- Zoznámenie s ultrazvukovým senzorom]{Ukážka programu --- Zoznámenie s ultrazvukovým senzorom}
+\label{obr:example-wave-on-proximity}
+\end{figure}
+
+\begin{figure}
+\centerline{\includegraphics[width=0.6\textwidth]{images/example-wave-on-proximity-2}}
+\caption[Ukážka programu --- Zoznámenie s ultrazvukovým senzorom 2]{Ukážka programu --- Zoznámenie s ultrazvukovým senzorom 2}
+\label{obr:example-wave-on-proximity-2}
+\end{figure}
+
+\begin{figure}
+\centerline{\includegraphics[width=0.6\textwidth]{images/example-wave-on-proximity-3}}
+\caption[Ukážka programu --- Zoznámenie s ultrazvukovým senzorom 3]{Ukážka programu --- Zoznámenie s ultrazvukovým senzorom 3}
+\label{obr:example-wave-on-proximity-3}
+\end{figure}
+
+\begin{figure}
+\centerline{\includegraphics[width=0.6\textwidth]{images/example-wave-on-proximity-4}}
+\caption[Ukážka programu --- Zoznámenie s ultrazvukovým senzorom 4]{Ukážka programu --- Zoznámenie s ultrazvukovým senzorom 4}
+\label{obr:example-wave-on-proximity-4}
+\end{figure}
+
+\newpage
+
+\subsubsection{Komplexný pohyb s detekciou prekážky}
+
+Ukážka \ref{obr:avoid-collision} má za úlohu používateľovi v krátkosti ilustrovať využitie spojenia blokov pre pohyb, načítanie hodnoty zo senzora a cyklov. Praktický príklad ukazuje, ako sa možno na základe údajov o vzdialenosti vyhnúť blízkej prekážke.
+
+\begin{figure}[h!]
+\centerline{\includegraphics[width=0.6\textwidth]{images/avoid-collision}}
+\caption[Ukážka programu \uv{vyhni sa prekážke}]{Ukážka programu \uv{vyhni sa prekážke}}
+\label{obr:avoid-collision}
+\end{figure}
+
+\subsubsection{Výpis cez sériový port USB}
+
+Ukážka \ref{obr:push-button} demonoštruje, ako je možné jednoducho doplniť interakciu s robotom použitím sériovej komunikácie.
+
+\begin{figure}[h!]
+\centerline{\includegraphics[width=0.6\textwidth]{images/push-button}}
+\caption[Ukážka programu \uv{stlač ľavé tlačidlo}]{Ukážka programu \uv{stlač ľavé tlačidlo}}
+\label{obr:push-button}
+\end{figure}
+
+\subsubsection{Funkcie a procedúry}
+
+\ref{obr:guess-number}
+
+\begin{figure}[h!]
+\centerline{\includegraphics[width=1\textwidth]{images/guess-number}}
+\caption[Ukážka programu \uv{hádaj číslo}]{Ukážka programu \uv{hádaj číslo}}
+\label{obr:guess-number}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
